@@ -1,0 +1,22 @@
+# node_modules
+node_modules/
+
+# dist
+dist/
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# env
+.env
+.env.local
+
+# coverage
+coverage/
+
+# SO
+.DS_Store
+Thumbs.db
+.cursorrules
