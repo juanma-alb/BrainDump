@@ -48,4 +48,17 @@ export class Note {
       updatedAt: new Date(),
     });
   }
+
+  /**
+   * Devuelve una nueva instancia con los tags fusionados (sin duplicados).
+   * Preserva los tags existentes y añade los nuevos.
+   */
+  withAddedTags(newTags: string[]): Note {
+    const merged = Array.from(new Set([...this.tags, ...newTags]));
+    return new Note({
+      ...this,
+      tags: merged,
+      updatedAt: new Date(),
+    });
+  }
 }

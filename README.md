@@ -36,6 +36,7 @@ braindump/
 ├── vitest.config.ts
 └── README.md
 
+
 ┌──────────────────────────────────────────────┐
 │              Infrastructure                  │  ← Frameworks, BDs, APIs, HTTP
 │  ┌────────────────────────────────────────┐  │
@@ -47,8 +48,6 @@ braindump/
 └──────────────────────────────────────────────┘
 
 ```
-
-
 
 ## Stack Tecnológico
 
