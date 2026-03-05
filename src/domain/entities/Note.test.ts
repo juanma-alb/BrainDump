@@ -3,6 +3,7 @@ import { Note } from './Note';
 
 const validProps = {
   id: 'test-id-1',
+  userId: 'user-001',
   title: 'Mi primera idea',
   content: 'Contenido de la idea.',
   tags: ['brainstorm'],
@@ -14,7 +15,14 @@ describe('Note Entity', () => {
   it('crea una nota válida con todos los campos', () => {
     const note = Note.create(validProps);
     expect(note.title).toBe('Mi primera idea');
+    expect(note.userId).toBe('user-001');
     expect(note.tags).toContain('brainstorm');
+  });
+
+  it('lanza error si userId está vacío', () => {
+    expect(() => Note.create({ ...validProps, userId: '  ' })).toThrowError(
+      'Una nota debe pertenecer a un usuario.'
+    );
   });
 
   it('lanza error si el título está vacío', () => {

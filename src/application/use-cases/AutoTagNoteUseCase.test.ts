@@ -8,6 +8,7 @@ import type { IAiService } from '@domain/ports/IAiService';
 
 const existingNote = Note.create({
   id: 'note-abc-123',
+  userId: 'user-001',
   title: 'Reflexión sobre patrones',
   content: 'La inyección de dependencias facilita el testing y la sustitución de implementaciones.',
   tags: ['patrones'],

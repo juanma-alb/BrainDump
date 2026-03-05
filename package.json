@@ -16,5 +16,9 @@
     "tsx": "^4.0.0",
     "typescript": "^5.8.0",
     "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.3.1"
   }
 }

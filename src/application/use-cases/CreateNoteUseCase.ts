@@ -3,6 +3,7 @@ import { Note } from '@domain/entities/Note';
 import type { INoteRepository } from '@domain/ports/INoteRepository';
 
 export interface CreateNoteInput {
+  userId: string;
   title: string;
   content: string;
   tags?: string[];
@@ -26,6 +27,7 @@ export class CreateNoteUseCase {
 
     const note = Note.create({
       id: randomUUID(),
+      userId: input.userId,
       title: input.title,
       content: input.content,
       tags: input.tags ?? [],
