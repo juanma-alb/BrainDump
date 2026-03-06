@@ -1,0 +1,23 @@
+### 1. Crear una Nueva Nota
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "userId": "user-demo-001",
+  "title": "Aprender Clean Architecture",
+  "content": "La arquitectura limpia separa el dominio de la infraestructura. Esto permite que hoy usemos Express y mañana podamos cambiar a Hono sin tocar el negocio.",
+  "tags": ["estudio", "backend"]
+}
+
+### 2. Auto-etiquetar con Gemini AI
+POST http://localhost:3000/api/notes/d0bf07c2-a1c5-45d1-93d0-d9aea8c8aabb/tags
+
+
+### 3. Prueba de Seguridad (Debería fallar por Zod)
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "userId": 12345, 
+  "content": ""
+}

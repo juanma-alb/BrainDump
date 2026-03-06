@@ -1,6 +1,8 @@
 import express, { type Express } from 'express';
 import cors from 'cors';
 import type { NoteController } from './NoteController';
+import { createNoteSchema } from './schemas/NoteSchemas';
+import { validateRequest } from './middlewares/validateRequest';
 
 export class Server {
   private readonly app: Express;
@@ -17,7 +19,7 @@ export class Server {
   }
 
   private configureRoutes(): void {
-    this.app.post('/api/notes', (req, res) => this.noteController.create(req, res));
+    this.app.post('/api/notes', validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
     this.app.post('/api/notes/:id/tags', (req, res) => this.noteController.autoTag(req, res));
   }
 
