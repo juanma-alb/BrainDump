@@ -1,40 +1,20 @@
 import { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
-import { GetNoteByIdUseCase } from '@application/use-cases/GetNoteByIdUseCase';
 import { InMemoryNoteRepository } from '@infrastructure/repositories/InMemoryNoteRepository';
 import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import { GeminiAiService } from '@infrastructure/ai-service/GeminiAiService';
+import { NoteController } from '@infrastructure/http/NoteController';
+import { Server } from '@infrastructure/http/Server';
 
-async function main(): Promise<void> {
- // Infraestructura
- const noteRepository = new InMemoryNoteRepository();
- const aiService = new GeminiAiService();
+// Infraestructura
+const noteRepository = new InMemoryNoteRepository();
+const aiService = new GeminiAiService();
 
- // UseCases (dependencias inyectadas)
- const createNote = new CreateNoteUseCase(noteRepository);
- const getNoteById = new GetNoteByIdUseCase(noteRepository);
- const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService); 
+// Casos de uso
+const createNote = new CreateNoteUseCase(noteRepository);
+const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
 
-  // Flujo de ejemplo
-  const created = await createNote.execute({
-    userId: 'user-demo-001',
-    title: 'Primera idea en BrainDump',
-    content: 'Esta arquitectura nos permite cambiar la base de datos sin tocar el dominio.',
-    tags: ['arquitectura', 'clean-code'],
-  });
+// HTTP
+const noteController = new NoteController(createNote, autoTagNote);
+const server = new Server(noteController);
 
-  console.log('Nota creada:', created);
-
-  const note = await getNoteById.execute({ id: created.id });
-  console.log('Nota recuperada:', note);
-
-  console.log('\n--- Solicitando a la IA que etiquete la nota... ---');
-  const tagResult = await autoTagNote.execute({ noteId: created.id });
-  
-  console.log('¡Etiquetado completado!');
-  console.log('Nuevas etiquetas generadas:', tagResult.addedTags);
-  
-  const updatedNote = await getNoteById.execute({ id: created.id });
-  console.log('\nNota final en la base de datos:', updatedNote);
-}
-
-main().catch(console.error);
+server.start(3000);
