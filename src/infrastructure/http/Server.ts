@@ -1,8 +1,9 @@
-import express, { type Express } from 'express';
-import cors from 'cors';
+import express, { type Express, type Request, type Response } from 'express';import cors from 'cors';
 import type { NoteController } from './NoteController';
 import { createNoteSchema } from './schemas/NoteSchemas';
 import { validateRequest } from './middlewares/validateRequest';
+import { requireAuth } from './middlewares/requireAuth';
+import jwt from 'jsonwebtoken';
 
 export class Server {
   private readonly app: Express;
@@ -19,9 +20,13 @@ export class Server {
   }
 
   private configureRoutes(): void {
-    this.app.post('/api/notes', validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
-    this.app.post('/api/notes/:id/tags', (req, res) => this.noteController.autoTag(req, res));
-  }
+    this.app.get('/api/auth/dev-token', (req, res) => {
+      const secret = process.env['JWT_SECRET'] || 'default_secret';
+      const token = jwt.sign({ userId: 'user-demo-001' }, secret, { expiresIn: '1h' });
+      res.json({ token });
+    });
+    this.app.post('/api/notes', requireAuth, validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
+    this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));  }
 
   start(port: number): void {
     this.app.listen(port, () => {

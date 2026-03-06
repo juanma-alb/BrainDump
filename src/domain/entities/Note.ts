@@ -8,10 +8,7 @@ export interface NoteProps {
   updatedAt: Date;
 }
 
-/**
- * Entidad Note: representa una idea/nota en el dominio.
- * No depende de ningún framework, librería externa ni base de datos.
- */
+
 export class Note {
   readonly id: string;
   readonly userId: string;
@@ -55,9 +52,9 @@ export class Note {
     });
   }
 
-  /**
-   * Devuelve una nueva instancia con los tags fusionados (sin duplicados).
-   * Preserva los tags existentes y añade los nuevos.
+  /*
+    Devuelve una nueva instancia con los tags fusionados (sin duplicados).
+    Preserva los tags existentes y añade los nuevos.
    */
   withAddedTags(newTags: string[]): Note {
     const merged = Array.from(new Set([...this.tags, ...newTags]));

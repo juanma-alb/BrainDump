@@ -10,7 +10,8 @@ export class NoteController {
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, title, content, tags } = req.body;
+      const userId = req.user!.id;
+      const { title, content, tags } = req.body;
       const result = await this.createNoteUseCase.execute({ userId, title, content, tags });
       res.status(201).json(result);
     } catch (error) {

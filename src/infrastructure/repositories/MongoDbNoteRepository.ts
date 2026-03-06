@@ -2,11 +2,9 @@ import { Note } from '@domain/entities/Note';
 import type { INoteRepository } from '@domain/ports/INoteRepository';
 import { NoteModel } from './models/NoteModel';
 
-/**
- * Implementación de INoteRepository usando MongoDB a través de Mongoose.
- * Los documentos de Mongoose se mapean a entidades de dominio mediante Note.create()
- * para garantizar que la capa de dominio nunca reciba objetos de infraestructura.
- */
+
+ //Implementación de INoteRepository usando MongoDB a través de Mongoose.
+ 
 export class MongoDbNoteRepository implements INoteRepository {
   async save(note: Note): Promise<void> {
     await NoteModel.findOneAndUpdate(
