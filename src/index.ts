@@ -1,20 +1,37 @@
+import 'dotenv/config';
+import mongoose from 'mongoose';
 import { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
-import { InMemoryNoteRepository } from '@infrastructure/repositories/InMemoryNoteRepository';
+import { MongoDbNoteRepository } from '@infrastructure/repositories/MongoDbNoteRepository';
 import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import { GeminiAiService } from '@infrastructure/ai-service/GeminiAiService';
 import { NoteController } from '@infrastructure/http/NoteController';
 import { Server } from '@infrastructure/http/Server';
 
-// Infraestructura
-const noteRepository = new InMemoryNoteRepository();
-const aiService = new GeminiAiService();
+async function main() {
+  const mongoUri = process.env.MONGODB_URI;
+  if (!mongoUri) {
+    throw new Error('La variable de entorno MONGODB_URI no está definida.');
+  }
 
-// Casos de uso
-const createNote = new CreateNoteUseCase(noteRepository);
-const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
+  await mongoose.connect(mongoUri);
+  console.log(' Conexión a MongoDB establecida correctamente.');
 
-// HTTP
-const noteController = new NoteController(createNote, autoTagNote);
-const server = new Server(noteController);
+  // Infraestructura
+  const noteRepository = new MongoDbNoteRepository();
+  const aiService = new GeminiAiService();
 
-server.start(3000);
+  // Casos de uso
+  const createNote = new CreateNoteUseCase(noteRepository);
+  const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
+
+  // HTTP
+  const noteController = new NoteController(createNote, autoTagNote);
+  const server = new Server(noteController);
+
+  server.start(3000);
+}
+
+main().catch((error) => {
+  console.error(' Error al iniciar la aplicación:', error);
+  process.exit(1);
+});
