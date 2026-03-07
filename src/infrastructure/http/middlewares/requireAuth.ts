@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 
 interface CustomJwtPayload {
   userId: string;
+  role: string;
 }
 
 declare global {
   namespace Express {
     interface Request {
-      user?: { id: string };
+      user?: { id: string; role: string };
     }
   }
 }
@@ -39,7 +40,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     const payload = jwt.verify(token, secret) as unknown as CustomJwtPayload;
     
     if (payload && payload.userId) {
-      req.user = { id: payload.userId };
+      req.user = { id: payload.userId, role: payload.role };
       next();
     } else {
       throw new Error('El token no contiene un userId válido');

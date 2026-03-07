@@ -1,11 +1,13 @@
 import type { Request, Response } from 'express';
 import type { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
 import type { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
+import type { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
 
 export class NoteController {
   constructor(
     private readonly createNoteUseCase: CreateNoteUseCase,
-    private readonly autoTagNoteUseCase: AutoTagNoteUseCase
+    private readonly autoTagNoteUseCase: AutoTagNoteUseCase,
+    private readonly getNotesUseCase: GetNotesUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -14,6 +16,21 @@ export class NoteController {
       const { title, content, tags } = req.body;
       const result = await this.createNoteUseCase.execute({ userId, title, content, tags });
       res.status(201).json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor.' });
+      }
+    }
+  }
+
+  async getAll(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.user!.id;
+      const role = req.user!.role;
+      const notes = await this.getNotesUseCase.execute({ userId, role });
+      res.status(200).json(notes);
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });

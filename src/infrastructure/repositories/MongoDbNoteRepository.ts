@@ -50,6 +50,21 @@ export class MongoDbNoteRepository implements INoteRepository {
     );
   }
 
+  async findByUserId(userId: string): Promise<Note[]> {
+    const docs = await NoteModel.find({ userId });
+    return docs.map((doc) =>
+      Note.create({
+        id: doc.id,
+        userId: doc.userId,
+        title: doc.title,
+        content: doc.content,
+        tags: doc.tags,
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
+      })
+    );
+  }
+
   async findByTag(tag: string): Promise<Note[]> {
     const docs = await NoteModel.find({ tags: tag });
     return docs.map((doc) =>

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import { logger } from '@infrastructure/logger/PinoLogger';
 import { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
+import { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
 import { MongoDbNoteRepository } from '@infrastructure/repositories/MongoDbNoteRepository';
 import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import { GeminiAiService } from '@infrastructure/ai-service/GeminiAiService';
@@ -31,11 +32,12 @@ async function main() {
   // Casos de uso
   const createNote = new CreateNoteUseCase(noteRepository);
   const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
+  const getNotes = new GetNotesUseCase(noteRepository);
   const registerUser = new RegisterUserUseCase(userRepository);
   const loginUser = new LoginUserUseCase(userRepository, tokenService);
 
   // HTTP
-  const noteController = new NoteController(createNote, autoTagNote);
+  const noteController = new NoteController(createNote, autoTagNote, getNotes);
   const authController = new AuthController(registerUser, loginUser);
   const server = new Server(noteController, authController);
 

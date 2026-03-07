@@ -28,6 +28,7 @@ export class Server {
   private configureRoutes(): void {
     this.app.post('/api/auth/register', validateRequest(registerSchema), (req, res) => this.authController.register(req, res));
     this.app.post('/api/auth/login', validateRequest(loginSchema), (req, res) => this.authController.login(req, res));
+    this.app.get('/api/notes', requireAuth, (req, res) => this.noteController.getAll(req, res));
     this.app.post('/api/notes', requireAuth, validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
     this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));
   }

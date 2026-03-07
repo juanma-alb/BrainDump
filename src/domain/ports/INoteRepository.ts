@@ -9,6 +9,7 @@ export interface INoteRepository {
   save(note: Note): Promise<void>;
   findById(id: string): Promise<Note | null>;
   findAll(): Promise<Note[]>;
+  findByUserId(userId: string): Promise<Note[]>;
   findByTag(tag: string): Promise<Note[]>;
   delete(id: string): Promise<void>;
 }
