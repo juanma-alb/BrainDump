@@ -18,6 +18,9 @@ import { AdminController } from '@infrastructure/http/AdminController';
 import { GetUserProfileUseCase } from '@application/use-cases/GetUserProfileUseCase';
 import { GetNotesByUsernameUseCase } from '@application/use-cases/GetNotesByUsernameUseCase';
 import { GenerateNoteDraftUseCase } from '@application/use-cases/GenerateNoteDraftUseCase';
+import { ForgotPasswordUseCase } from '@application/use-cases/ForgotPasswordUseCase';
+import { ResetPasswordUseCase } from '@application/use-cases/ResetPasswordUseCase';
+import { NodemailerEmailService } from '@infrastructure/email/NodemailerEmailService';
 import { Server } from '@infrastructure/http/Server';
 
 async function main() {
@@ -34,6 +37,7 @@ async function main() {
   const userRepository = new MongoDbUserRepository();
   const aiService = new GeminiAiService();
   const tokenService = new JwtTokenService();
+  const emailService = new NodemailerEmailService();
 
   // Casos de uso
   const createNote = new CreateNoteUseCase(noteRepository);
@@ -46,10 +50,12 @@ async function main() {
   const getUserProfile = new GetUserProfileUseCase(userRepository);
   const getNotesByUsername = new GetNotesByUsernameUseCase(userRepository, noteRepository);
   const generateNoteDraft = new GenerateNoteDraftUseCase(aiService);
+  const forgotPassword = new ForgotPasswordUseCase(userRepository, tokenService, emailService);
+  const resetPassword = new ResetPasswordUseCase(userRepository, tokenService);
 
   // HTTP
   const noteController = new NoteController(createNote, autoTagNote, getNotes, updateNote, deleteNote, generateNoteDraft);
-  const authController = new AuthController(registerUser, loginUser);
+  const authController = new AuthController(registerUser, loginUser, forgotPassword, resetPassword);
   const adminController = new AdminController(getUserProfile, getNotesByUsername);
   const server = new Server(noteController, authController, adminController);
 

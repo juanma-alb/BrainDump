@@ -15,4 +15,17 @@ export class JwtTokenService implements ITokenService {
   generateToken(payload: TokenPayload): string {
     return jwt.sign(payload, this.secret, { expiresIn: '24h' });
   }
+
+  generatePasswordResetToken(payload: { userId: string }, currentPasswordHash: string): string {
+    return jwt.sign(payload, this.secret + currentPasswordHash, { expiresIn: '15m' });
+  }
+
+  verifyPasswordResetToken(token: string, currentPasswordHash: string): { userId: string } {
+    try {
+      const decoded = jwt.verify(token, this.secret + currentPasswordHash);
+      return decoded as { userId: string };
+    } catch {
+      throw new Error('Token inválido o expirado');
+    }
+  }
 }

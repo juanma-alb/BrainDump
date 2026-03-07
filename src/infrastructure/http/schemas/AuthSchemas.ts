@@ -14,3 +14,13 @@ export const loginSchema = z.object({
   email: z.string().email({ message: 'El email no tiene un formato válido.' }),
   password: z.string().min(1, { message: 'La contraseña es requerida.' }),
 });
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({ message: 'El email no tiene un formato válido.' }),
+});
+
+export const resetPasswordSchema = z.object({
+  id: z.string().uuid({ message: 'El id de usuario no es válido.' }),
+  token: z.string().min(1, { message: 'El token es requerido.' }),
+  newPassword: z.string().min(6, { message: 'La nueva contraseña debe tener al menos 6 caracteres.' }),
+});
