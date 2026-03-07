@@ -53,7 +53,7 @@ Authorization: Bearer
 ### 4. Generar Borrador con IA
 POST http://localhost:3000/api/notes/draft
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzE2YjAyYS0wYmZkLTQzZTktOGVjZi0xYWM0YTdkMzNjNmYiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3Mjg3MTgwNywiZXhwIjoxNzcyOTU4MjA3fQ.SdHHKfxGC0WI9Mig8F7tGDM8egiyJ7ODvYeqJOx8LDI
+Authorization: Bearer 
 
 {
   "topic": "Los principios SOLID en la programación orientada a objetos"
