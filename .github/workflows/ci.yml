@@ -1,0 +1,37 @@
+# Pipeline de CI/CD 
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1: Descarga el código del repositorio en el runner de GitHub Actions.
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      # 2: Instala y configura la versión de Node.js especificada.
+      - name: Setup de Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # 3: Instala las dependencias de forma limpia y determinista.
+    
+      - name: Instalación de dependencias
+        run: npm ci
+
+      # 4: Ejecuta la suite de tests con Vitest en modo no interactivo (run).
+      - name: Ejecución de tests
+        run: npm run test:run
