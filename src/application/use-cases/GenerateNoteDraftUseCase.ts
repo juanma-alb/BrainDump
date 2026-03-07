@@ -1,0 +1,17 @@
+import type { IAiService } from '@domain/ports/IAiService';
+
+interface Input {
+  topic: string;
+}
+
+interface Output {
+  generatedContent: string;
+}
+
+export class GenerateNoteDraftUseCase {
+  constructor(private readonly aiService: IAiService) {}
+
+  async execute(input: Input): Promise<Output> {
+    return { generatedContent: await this.aiService.generateNoteContent(input.topic) };
+  }
+}

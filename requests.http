@@ -30,7 +30,8 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "email": "arquitecto@braindump.com",
+  "username": "userprueba",
+  "email": "userprueba@braindump.com",
   "password": "supersecretpassword",
   "role": "USER"
 }
@@ -40,10 +41,20 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "arquitecto@braindump.com",
+  "username": "userprueba",
+  "email": "userprueba@braindump.com",
   "password": "supersecretpassword"
 }
 
 ### 3. Obtener Notas de un user (RBAC)
 GET http://localhost:3000/api/notes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5YWRmOTg1Ni1jYjljLTQyODEtODdkMC0xYTMwMjhkNWMxYTciLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3Mjg1NzcwMSwiZXhwIjoxNzcyOTQ0MTAxfQ.DIfaWOTTpwN21PaeyCqvVCrhDTl50CeTIi6eVurbr38
+Authorization: Bearer 
+
+### 4. Generar Borrador con IA
+POST http://localhost:3000/api/notes/draft
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzE2YjAyYS0wYmZkLTQzZTktOGVjZi0xYWM0YTdkMzNjNmYiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3Mjg3MTgwNywiZXhwIjoxNzcyOTU4MjA3fQ.SdHHKfxGC0WI9Mig8F7tGDM8egiyJ7ODvYeqJOx8LDI
+
+{
+  "topic": "Los principios SOLID en la programación orientada a objetos"
+}

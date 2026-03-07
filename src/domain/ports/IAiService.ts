@@ -3,4 +3,5 @@
  */
 export interface IAiService {
   generateTags(content: string): Promise<string[]>;
+  generateNoteContent(topic: string): Promise<string>;
 }

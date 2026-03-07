@@ -17,6 +17,7 @@ import { AuthController } from '@infrastructure/http/AuthController';
 import { AdminController } from '@infrastructure/http/AdminController';
 import { GetUserProfileUseCase } from '@application/use-cases/GetUserProfileUseCase';
 import { GetNotesByUsernameUseCase } from '@application/use-cases/GetNotesByUsernameUseCase';
+import { GenerateNoteDraftUseCase } from '@application/use-cases/GenerateNoteDraftUseCase';
 import { Server } from '@infrastructure/http/Server';
 
 async function main() {
@@ -44,9 +45,10 @@ async function main() {
   const loginUser = new LoginUserUseCase(userRepository, tokenService);
   const getUserProfile = new GetUserProfileUseCase(userRepository);
   const getNotesByUsername = new GetNotesByUsernameUseCase(userRepository, noteRepository);
+  const generateNoteDraft = new GenerateNoteDraftUseCase(aiService);
 
   // HTTP
-  const noteController = new NoteController(createNote, autoTagNote, getNotes, updateNote, deleteNote);
+  const noteController = new NoteController(createNote, autoTagNote, getNotes, updateNote, deleteNote, generateNoteDraft);
   const authController = new AuthController(registerUser, loginUser);
   const adminController = new AdminController(getUserProfile, getNotesByUsername);
   const server = new Server(noteController, authController, adminController);
