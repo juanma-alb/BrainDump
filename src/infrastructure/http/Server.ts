@@ -1,16 +1,20 @@
 import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import type { NoteController } from './NoteController';
+import type { AuthController } from './AuthController';
 import { createNoteSchema } from './schemas/NoteSchemas';
+import { registerSchema, loginSchema } from './schemas/AuthSchemas';
 import { validateRequest } from './middlewares/validateRequest';
 import { requireAuth } from './middlewares/requireAuth';
-import jwt from 'jsonwebtoken';
 import { logger } from '@infrastructure/logger/PinoLogger';
 
 export class Server {
   private readonly app: Express;
 
-  constructor(private readonly noteController: NoteController) {
+  constructor(
+    private readonly noteController: NoteController,
+    private readonly authController: AuthController
+  ) {
     this.app = express();
     this.configureMiddleware();
     this.configureRoutes();
@@ -22,13 +26,11 @@ export class Server {
   }
 
   private configureRoutes(): void {
-    this.app.get('/api/auth/dev-token', (req, res) => {
-      const secret = process.env['JWT_SECRET'] || 'default_secret';
-      const token = jwt.sign({ userId: 'user-demo-001' }, secret, { expiresIn: '1h' });
-      res.json({ token });
-    });
+    this.app.post('/api/auth/register', validateRequest(registerSchema), (req, res) => this.authController.register(req, res));
+    this.app.post('/api/auth/login', validateRequest(loginSchema), (req, res) => this.authController.login(req, res));
     this.app.post('/api/notes', requireAuth, validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
-    this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));  }
+    this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));
+  }
 
   start(port: number): void {
     this.app.listen(port, () => {

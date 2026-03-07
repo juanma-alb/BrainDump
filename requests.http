@@ -24,3 +24,13 @@ Content-Type: application/json
   "userId": 12345, 
   "content": ""
 }
+
+###  Registrar un Nuevo Usuario
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "arquitecto@braindump.com",
+  "password": "supersecretpassword",
+  "role": "USER"
+}

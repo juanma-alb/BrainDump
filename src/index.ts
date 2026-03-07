@@ -6,6 +6,11 @@ import { MongoDbNoteRepository } from '@infrastructure/repositories/MongoDbNoteR
 import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import { GeminiAiService } from '@infrastructure/ai-service/GeminiAiService';
 import { NoteController } from '@infrastructure/http/NoteController';
+import { MongoDbUserRepository } from '@infrastructure/repositories/MongoDbUserRepository';
+import { JwtTokenService } from '@infrastructure/auth/JwtTokenService';
+import { RegisterUserUseCase } from '@application/use-cases/RegisterUserUseCase';
+import { LoginUserUseCase } from '@application/use-cases/LoginUserUseCase';
+import { AuthController } from '@infrastructure/http/AuthController';
 import { Server } from '@infrastructure/http/Server';
 
 async function main() {
@@ -19,15 +24,20 @@ async function main() {
 
   // Infraestructura
   const noteRepository = new MongoDbNoteRepository();
+  const userRepository = new MongoDbUserRepository();
   const aiService = new GeminiAiService();
+  const tokenService = new JwtTokenService();
 
   // Casos de uso
   const createNote = new CreateNoteUseCase(noteRepository);
   const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
+  const registerUser = new RegisterUserUseCase(userRepository);
+  const loginUser = new LoginUserUseCase(userRepository, tokenService);
 
   // HTTP
   const noteController = new NoteController(createNote, autoTagNote);
-  const server = new Server(noteController);
+  const authController = new AuthController(registerUser, loginUser);
+  const server = new Server(noteController, authController);
 
   server.start(3000);
 }
