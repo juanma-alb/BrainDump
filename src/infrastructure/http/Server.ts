@@ -2,10 +2,12 @@ import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import type { NoteController } from './NoteController';
 import type { AuthController } from './AuthController';
+import type { AdminController } from './AdminController';
 import { createNoteSchema, updateNoteSchema } from './schemas/NoteSchemas';
 import { registerSchema, loginSchema } from './schemas/AuthSchemas';
 import { validateRequest } from './middlewares/validateRequest';
 import { requireAuth } from './middlewares/requireAuth';
+import { requireAdmin } from './middlewares/requireAdmin';
 import { logger } from '@infrastructure/logger/PinoLogger';
 
 export class Server {
@@ -13,7 +15,8 @@ export class Server {
 
   constructor(
     private readonly noteController: NoteController,
-    private readonly authController: AuthController
+    private readonly authController: AuthController,
+    private readonly adminController: AdminController
   ) {
     this.app = express();
     this.configureMiddleware();
@@ -33,6 +36,9 @@ export class Server {
     this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));
     this.app.put('/api/notes/:id', requireAuth, validateRequest(updateNoteSchema), (req: Request<{ id: string }>, res: Response) => this.noteController.update(req, res));
     this.app.delete('/api/notes/:id', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.delete(req, res));
+
+    this.app.get('/api/admin/users/:username', requireAuth, requireAdmin, (req: Request<{ username: string }>, res: Response) => this.adminController.getUser(req, res));
+    this.app.get('/api/admin/users/:username/notes', requireAuth, requireAdmin, (req: Request<{ username: string }>, res: Response) => this.adminController.getUserNotes(req, res));
   }
 
   start(port: number): void {

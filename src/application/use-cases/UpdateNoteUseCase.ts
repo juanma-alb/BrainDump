@@ -9,12 +9,8 @@ export interface UpdateNoteInput {
   tags?: string[];
 }
 
-/**
- * Caso de Uso: Actualizar una nota existente.
- *
- * Seguridad IDOR/BOLA: verifica que el userId del solicitante coincide
- * con el userId de la nota antes de realizar cualquier modificación.
- * Las actualizaciones son parciales: sólo se reemplazan los campos recibidos.
+/*
+Seguridad IDOR/BOLA: verifica que el userId del solicitante coincide
  */
 export class UpdateNoteUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}

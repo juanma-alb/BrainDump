@@ -3,14 +3,13 @@ import type { INoteRepository } from '@domain/ports/INoteRepository';
 export interface DeleteNoteInput {
   noteId: string;
   userId: string;
+  role: string;
 }
 
-/**
- * Caso de Uso: Eliminar una nota por su ID.
- *
- * Seguridad IDOR/BOLA: verifica que el userId del solicitante coincide
- * con el userId de la nota antes de proceder con el borrado.
- * Un usuario nunca puede eliminar la nota de otro usuario.
+/*
+  Caso de Uso: Eliminar una nota por su ID.
+
+  Seguridad IDOR/BOLA
  */
 export class DeleteNoteUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}
@@ -22,7 +21,7 @@ export class DeleteNoteUseCase {
       throw new Error(`Nota con id "${input.noteId}" no encontrada.`);
     }
 
-    if (note.userId !== input.userId) {
+    if (input.role !== 'ADMIN' && note.userId !== input.userId) {
       throw new Error('No tienes permiso para eliminar esta nota.');
     }
 

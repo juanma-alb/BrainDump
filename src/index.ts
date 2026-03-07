@@ -14,6 +14,9 @@ import { JwtTokenService } from '@infrastructure/auth/JwtTokenService';
 import { RegisterUserUseCase } from '@application/use-cases/RegisterUserUseCase';
 import { LoginUserUseCase } from '@application/use-cases/LoginUserUseCase';
 import { AuthController } from '@infrastructure/http/AuthController';
+import { AdminController } from '@infrastructure/http/AdminController';
+import { GetUserProfileUseCase } from '@application/use-cases/GetUserProfileUseCase';
+import { GetNotesByUsernameUseCase } from '@application/use-cases/GetNotesByUsernameUseCase';
 import { Server } from '@infrastructure/http/Server';
 
 async function main() {
@@ -39,11 +42,14 @@ async function main() {
   const deleteNote = new DeleteNoteUseCase(noteRepository);
   const registerUser = new RegisterUserUseCase(userRepository);
   const loginUser = new LoginUserUseCase(userRepository, tokenService);
+  const getUserProfile = new GetUserProfileUseCase(userRepository);
+  const getNotesByUsername = new GetNotesByUsernameUseCase(userRepository, noteRepository);
 
   // HTTP
   const noteController = new NoteController(createNote, autoTagNote, getNotes, updateNote, deleteNote);
   const authController = new AuthController(registerUser, loginUser);
-  const server = new Server(noteController, authController);
+  const adminController = new AdminController(getUserProfile, getNotesByUsername);
+  const server = new Server(noteController, authController, adminController);
 
   server.start(3000);
 }

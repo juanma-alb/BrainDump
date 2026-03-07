@@ -82,7 +82,8 @@ export class NoteController {
     try {
       const noteId = req.params.id;
       const userId = req.user!.id;
-      await this.deleteNoteUseCase.execute({ noteId, userId });
+      const role = req.user!.role;
+      await this.deleteNoteUseCase.execute({ noteId, userId, role });
       res.status(200).json({ message: 'Nota eliminada correctamente.' });
     } catch (error) {
       if (error instanceof Error) {

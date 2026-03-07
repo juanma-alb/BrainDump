@@ -35,7 +35,7 @@ describe('DeleteNoteUseCase', () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     const useCase = new DeleteNoteUseCase(mockNoteRepository);
-    await useCase.execute({ noteId: 'note-to-delete', userId: OWNER_ID });
+    await useCase.execute({ noteId: 'note-to-delete', userId: OWNER_ID, role: 'USER' });
 
     expect(mockNoteRepository.findById).toHaveBeenCalledWith('note-to-delete');
     expect(mockNoteRepository.delete).toHaveBeenCalledWith('note-to-delete');
@@ -47,7 +47,7 @@ describe('DeleteNoteUseCase', () => {
     const useCase = new DeleteNoteUseCase(mockNoteRepository);
 
     await expect(
-      useCase.execute({ noteId: 'note-to-delete', userId: ATTACKER_ID })
+      useCase.execute({ noteId: 'note-to-delete', userId: ATTACKER_ID, role: 'USER' })
     ).rejects.toThrowError('No tienes permiso para eliminar esta nota.');
 
     expect(mockNoteRepository.delete).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('DeleteNoteUseCase', () => {
     const useCase = new DeleteNoteUseCase(mockNoteRepository);
 
     await expect(
-      useCase.execute({ noteId: 'id-inexistente', userId: OWNER_ID })
+      useCase.execute({ noteId: 'id-inexistente', userId: OWNER_ID, role: 'USER' })
     ).rejects.toThrowError('Nota con id "id-inexistente" no encontrada.');
 
     expect(mockNoteRepository.delete).not.toHaveBeenCalled();
