@@ -25,7 +25,7 @@ Content-Type: application/json
   "content": ""
 }
 
-###  Registrar un Nuevo Usuario
+###  1. Registrer
 POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
@@ -34,3 +34,16 @@ Content-Type: application/json
   "password": "supersecretpassword",
   "role": "USER"
 }
+
+### 2. login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "arquitecto@braindump.com",
+  "password": "supersecretpassword"
+}
+
+### 3. Obtener Notas de un user (RBAC)
+GET http://localhost:3000/api/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5YWRmOTg1Ni1jYjljLTQyODEtODdkMC0xYTMwMjhkNWMxYTciLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3Mjg1NzcwMSwiZXhwIjoxNzcyOTQ0MTAxfQ.DIfaWOTTpwN21PaeyCqvVCrhDTl50CeTIi6eVurbr38
