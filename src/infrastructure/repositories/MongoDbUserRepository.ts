@@ -9,6 +9,7 @@ export class MongoDbUserRepository implements IUserRepository {
       {
         id: user.id,
         email: user.email,
+        username: user.username,
         passwordHash: user.passwordHash,
         role: user.role,
       },
@@ -23,6 +24,21 @@ export class MongoDbUserRepository implements IUserRepository {
     return User.create({
       id: doc.id,
       email: doc.email,
+      username: doc.username,
+      passwordHash: doc.passwordHash,
+      role: doc.role,
+      createdAt: doc.createdAt,
+    });
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    const doc = await UserModel.findOne({ username });
+    if (!doc) return null;
+
+    return User.create({
+      id: doc.id,
+      email: doc.email,
+      username: doc.username,
       passwordHash: doc.passwordHash,
       role: doc.role,
       createdAt: doc.createdAt,
@@ -36,6 +52,7 @@ export class MongoDbUserRepository implements IUserRepository {
     return User.create({
       id: doc.id,
       email: doc.email,
+      username: doc.username,
       passwordHash: doc.passwordHash,
       role: doc.role,
       createdAt: doc.createdAt,

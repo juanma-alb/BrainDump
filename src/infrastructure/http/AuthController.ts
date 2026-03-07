@@ -10,8 +10,8 @@ export class AuthController {
 
   async register(req: Request, res: Response): Promise<void> {
     try {
-      const { email, password, role } = req.body;
-      const result = await this.registerUserUseCase.execute({ email, password, role });
+      const { email, username, password, role } = req.body;
+      const result = await this.registerUserUseCase.execute({ email, username, password, role });
       res.status(201).json(result);
     } catch (error) {
       if (error instanceof Error) {
