@@ -11,5 +11,6 @@ export interface INoteRepository {
   findAll(): Promise<Note[]>;
   findByUserId(userId: string): Promise<Note[]>;
   findByTag(tag: string): Promise<Note[]>;
+  update(note: Note): Promise<void>;
   delete(id: string): Promise<void>;
 }

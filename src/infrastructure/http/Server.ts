@@ -2,7 +2,7 @@ import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import type { NoteController } from './NoteController';
 import type { AuthController } from './AuthController';
-import { createNoteSchema } from './schemas/NoteSchemas';
+import { createNoteSchema, updateNoteSchema } from './schemas/NoteSchemas';
 import { registerSchema, loginSchema } from './schemas/AuthSchemas';
 import { validateRequest } from './middlewares/validateRequest';
 import { requireAuth } from './middlewares/requireAuth';
@@ -31,6 +31,8 @@ export class Server {
     this.app.get('/api/notes', requireAuth, (req, res) => this.noteController.getAll(req, res));
     this.app.post('/api/notes', requireAuth, validateRequest(createNoteSchema), (req, res) => this.noteController.create(req, res));
     this.app.post('/api/notes/:id/tags', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.autoTag(req, res));
+    this.app.put('/api/notes/:id', requireAuth, validateRequest(updateNoteSchema), (req: Request<{ id: string }>, res: Response) => this.noteController.update(req, res));
+    this.app.delete('/api/notes/:id', requireAuth, (req: Request<{ id: string }>, res: Response) => this.noteController.delete(req, res));
   }
 
   start(port: number): void {

@@ -5,3 +5,9 @@ export const createNoteSchema = z.object({
   content: z.string().min(1),
   tags: z.array(z.string()).optional(),
 });
+
+export const updateNoteSchema = z.object({
+  title: z.string().min(1).optional(),
+  content: z.string().min(1).optional(),
+  tags: z.array(z.string()).optional(),
+});

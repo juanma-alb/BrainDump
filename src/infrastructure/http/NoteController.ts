@@ -2,12 +2,16 @@ import type { Request, Response } from 'express';
 import type { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
 import type { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import type { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
+import type { UpdateNoteUseCase } from '@application/use-cases/UpdateNoteUseCase';
+import type { DeleteNoteUseCase } from '@application/use-cases/DeleteNoteUseCase';
 
 export class NoteController {
   constructor(
     private readonly createNoteUseCase: CreateNoteUseCase,
     private readonly autoTagNoteUseCase: AutoTagNoteUseCase,
-    private readonly getNotesUseCase: GetNotesUseCase
+    private readonly getNotesUseCase: GetNotesUseCase,
+    private readonly updateNoteUseCase: UpdateNoteUseCase,
+    private readonly deleteNoteUseCase: DeleteNoteUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -49,6 +53,37 @@ export class NoteController {
       }
       const result = await this.autoTagNoteUseCase.execute({ noteId });
       res.status(200).json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor.' });
+      }
+    }
+  }
+
+  async update(req: Request<{ id: string }>, res: Response): Promise<void> {
+    try {
+      const noteId = req.params.id;
+      const userId = req.user!.id;
+      const { title, content, tags } = req.body;
+      const result = await this.updateNoteUseCase.execute({ noteId, userId, title, content, tags });
+      res.status(200).json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor.' });
+      }
+    }
+  }
+
+  async delete(req: Request<{ id: string }>, res: Response): Promise<void> {
+    try {
+      const noteId = req.params.id;
+      const userId = req.user!.id;
+      await this.deleteNoteUseCase.execute({ noteId, userId });
+      res.status(200).json({ message: 'Nota eliminada correctamente.' });
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });

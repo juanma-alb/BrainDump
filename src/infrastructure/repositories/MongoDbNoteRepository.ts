@@ -80,6 +80,18 @@ export class MongoDbNoteRepository implements INoteRepository {
     );
   }
 
+  async update(note: Note): Promise<void> {
+    await NoteModel.updateOne(
+      { id: note.id },
+      {
+        title: note.title,
+        content: note.content,
+        tags: note.tags,
+        updatedAt: note.updatedAt,
+      }
+    );
+  }
+
   async delete(id: string): Promise<void> {
     await NoteModel.deleteOne({ id });
   }

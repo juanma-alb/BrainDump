@@ -2,10 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RegisterUserUseCase } from '../RegisterUserUseCase';
 import type { IUserRepository } from '@domain/ports/IUserRepository';
 
-/**
- * Mockeamos bcrypt para que el hash sea instantáneo en los tests.
- * No probamos la lógica de bcrypt (es librería externa), solo la del caso de uso.
- */
+
 vi.mock('bcrypt', () => ({
   default: {
     hash: vi.fn().mockResolvedValue('hashed_password_mock'),

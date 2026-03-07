@@ -3,10 +3,7 @@ import { LoginUserUseCase } from '../LoginUserUseCase';
 import type { IUserRepository } from '@domain/ports/IUserRepository';
 import type { ITokenService } from '@domain/ports/ITokenService';
 
-/**
- * Mockeamos bcrypt para controlar el resultado de compare sin hashing real.
- * El comportamiento (true/false) se sobreescribe en cada test según el escenario.
- */
+
 vi.mock('bcrypt', () => ({
   default: {
     compare: vi.fn(),

@@ -21,6 +21,8 @@ const mockNoteRepository: INoteRepository = {
   findById: vi.fn(),
   findAll: vi.fn(),
   findByTag: vi.fn(),
+  findByUserId: vi.fn(),
+  update: vi.fn(),
   delete: vi.fn().mockResolvedValue(undefined),
 };
 
