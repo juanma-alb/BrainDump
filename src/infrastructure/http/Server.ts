@@ -1,9 +1,11 @@
-import express, { type Express, type Request, type Response } from 'express';import cors from 'cors';
+import express, { type Express, type Request, type Response } from 'express';
+import cors from 'cors';
 import type { NoteController } from './NoteController';
 import { createNoteSchema } from './schemas/NoteSchemas';
 import { validateRequest } from './middlewares/validateRequest';
 import { requireAuth } from './middlewares/requireAuth';
 import jwt from 'jsonwebtoken';
+import { logger } from '@infrastructure/logger/PinoLogger';
 
 export class Server {
   private readonly app: Express;
@@ -30,7 +32,9 @@ export class Server {
 
   start(port: number): void {
     this.app.listen(port, () => {
-      console.log(`Servidor escuchando en http://localhost:${port}`);
+      logger.info(`Servidor escuchando en http://localhost:${port}`);
+    }).on('error', (error: Error) => {
+      logger.error({ err: error }, 'Error al iniciar el servidor HTTP');
     });
   }
 }

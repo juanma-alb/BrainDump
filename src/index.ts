@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
+import { logger } from '@infrastructure/logger/PinoLogger';
 import { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
 import { MongoDbNoteRepository } from '@infrastructure/repositories/MongoDbNoteRepository';
 import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
@@ -10,11 +11,11 @@ import { Server } from '@infrastructure/http/Server';
 async function main() {
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) {
-    throw new Error('La variable de entorno MONGODB_URI no está definida.');
+    throw new Error('La variable de entorno MONGODB_URI no se encuentra definida.');
   }
 
   await mongoose.connect(mongoUri);
-  console.log(' Conexión a MongoDB establecida correctamente.');
+  logger.info('Conexion a MongoDB establecida correctamente.');
 
   // Infraestructura
   const noteRepository = new MongoDbNoteRepository();
@@ -31,7 +32,7 @@ async function main() {
   server.start(3000);
 }
 
-main().catch((error) => {
-  console.error(' Error al iniciar la aplicación:', error);
+main().catch((error: unknown) => {
+  logger.error({ err: error }, 'Error al iniciar la app');
   process.exit(1);
 });
