@@ -1,5 +1,5 @@
 import { Note } from '@domain/entities/Note';
-import type { INoteRepository } from '@domain/ports/INoteRepository';
+import type { INoteRepository, NoteFilters, PaginatedResult } from '@domain/ports/INoteRepository';
 import { NoteModel } from './models/NoteModel';
 
 
@@ -94,5 +94,39 @@ export class MongoDbNoteRepository implements INoteRepository {
 
   async delete(id: string): Promise<void> {
     await NoteModel.deleteOne({ id });
+  }
+
+  async findMany(filters: NoteFilters): Promise<PaginatedResult<Note>> {
+    const query: Record<string, unknown> = {};
+
+    if (filters.userId) query.userId = filters.userId;
+    if (filters.tag) query.tags = filters.tag;
+
+    const skip = (filters.page - 1) * filters.limit;
+
+    const [docs, total] = await Promise.all([
+      NoteModel.find(query).skip(skip).limit(filters.limit).sort({ createdAt: -1 }),
+      NoteModel.countDocuments(query),
+    ]);
+
+    const items = docs.map((doc) =>
+      Note.create({
+        id: doc.id,
+        userId: doc.userId,
+        title: doc.title,
+        content: doc.content,
+        tags: doc.tags,
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
+      })
+    );
+
+    return {
+      items,
+      total,
+      page: filters.page,
+      limit: filters.limit,
+      totalPages: Math.ceil(total / filters.limit),
+    };
   }
 }

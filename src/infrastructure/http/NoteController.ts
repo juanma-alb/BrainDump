@@ -35,8 +35,16 @@ export class NoteController {
     try {
       const userId = req.user!.id;
       const role = req.user!.role;
-      const notes = await this.getNotesUseCase.execute({ userId, role });
-      res.status(200).json(notes);
+
+      const pageNum = Number(req.query.page);
+      const limitNum = Number(req.query.limit);
+      const tag = req.query.tag as string | undefined;
+
+      const page = !isNaN(pageNum) && pageNum > 0 ? pageNum : undefined;
+      const limit = !isNaN(limitNum) && limitNum > 0 ? limitNum : undefined;
+
+      const result = await this.getNotesUseCase.execute({ userId, role, page, limit, tag });
+      res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });

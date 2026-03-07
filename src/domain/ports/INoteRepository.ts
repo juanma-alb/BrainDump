@@ -1,5 +1,20 @@
 import type { Note } from '@domain/entities/Note';
 
+export interface NoteFilters {
+  page: number;
+  limit: number;
+  userId?: string;
+  tag?: string;
+}
+
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 /**
  * Puerto (contrato) que define cómo la aplicación persiste y recupera notas.
  * La capa de Infrastructure DEBE implementar esta interfaz.
@@ -13,4 +28,5 @@ export interface INoteRepository {
   findByTag(tag: string): Promise<Note[]>;
   update(note: Note): Promise<void>;
   delete(id: string): Promise<void>;
+  findMany(filters: NoteFilters): Promise<PaginatedResult<Note>>;
 }
