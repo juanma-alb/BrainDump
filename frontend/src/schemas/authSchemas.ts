@@ -14,5 +14,15 @@ export const registerSchema = z.object({
   password: z.string().min(6, { message: 'La contraseña debe tener al menos 6 caracteres.' }),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({ message: 'El email no tiene un formato válido.' }),
+});
+
+export const resetPasswordFormSchema = z.object({
+  newPassword: z.string().min(6, { message: 'La contraseña debe tener al menos 6 caracteres.' }),
+});
+
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordFormSchema>;
