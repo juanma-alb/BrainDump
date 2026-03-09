@@ -2,11 +2,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginSchema, type LoginFormValues } from '../schemas/authSchemas';
+import { registerSchema, type RegisterFormValues } from '../schemas/authSchemas';
 import { authService } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 
-function Login() {
+function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState<string>('');
@@ -15,18 +15,18 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     try {
       setError('');
-      const response = await authService.login(data);
+      const response = await authService.register(data);
       login(response);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Credenciales inválidas');
+      setError(err.response?.data?.message || 'Error al registrarse. Intenta nuevamente.');
     }
   };
 
@@ -34,7 +34,7 @@ function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Iniciar Sesión
+          Crear Cuenta
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -63,6 +63,24 @@ function Login() {
           </div>
 
           <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre de Usuario
+            </label>
+            <input
+              id="username"
+              type="text"
+              {...register('username')}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errors.username ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="usuario123"
+            />
+            {errors.username && (
+              <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
+            )}
+          </div>
+
+          <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Contraseña
             </label>
@@ -73,7 +91,7 @@ function Login() {
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.password ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="Ingresa aquí tu contraseña"
+              placeholder="Ingresa tu contraseña"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
@@ -85,14 +103,14 @@ function Login() {
             disabled={isSubmitting}
             className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            {isSubmitting ? 'Registrando...' : 'Crear Cuenta'}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          ¿No tienes cuenta?{' '}
-          <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">
-            Regístrate
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+            Inicia sesión
           </Link>
         </p>
       </div>
@@ -100,4 +118,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
