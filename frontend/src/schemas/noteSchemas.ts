@@ -35,5 +35,10 @@ export const updateNoteSchema = z.object({
     .transform((tags) => (tags ? tags.filter((tag) => tag.length > 0) : undefined)),
 });
 
+export const generateDraftSchema = z.object({
+  topic: z.string().min(3, 'El tema debe tener al menos 3 caracteres').max(100, 'El tema no puede exceder los 100 caracteres')
+});
+
 export type CreateNoteFormValues = z.infer<typeof createNoteSchema>;
 export type UpdateNoteFormValues = z.infer<typeof updateNoteSchema>;
+export type GenerateDraftValues = z.infer<typeof generateDraftSchema>;

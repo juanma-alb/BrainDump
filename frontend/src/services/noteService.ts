@@ -30,4 +30,9 @@ export const noteService = {
   async deleteNote(id: string): Promise<void> {
     await api.delete(`/notes/${id}`);
   },
+
+  async generateDraft(topic: string): Promise<{ generatedContent: string }> {
+    const response = await api.post<{ generatedContent: string }>('/notes/draft', { topic });
+    return response.data;
+  },
 };

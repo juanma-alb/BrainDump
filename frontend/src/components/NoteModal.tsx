@@ -21,6 +21,10 @@ interface NoteModalProps {
 export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteModalProps) {
   const [tagInput, setTagInput] = useState('');
   const [localTags, setLocalTags] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showAiInput, setShowAiInput] = useState(false);
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiError, setAiError] = useState('');
   
   const isEditing = Boolean(noteToEdit);
   const schema = isEditing ? updateNoteSchema : createNoteSchema;
@@ -73,6 +77,28 @@ export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteM
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddTag();
+    }
+  };
+
+  const handleGenerateDraft = async () => {
+    setAiError('');
+    
+    if (aiTopic.trim().length < 3) {
+      setAiError('El tema debe tener al menos 3 caracteres');
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      const result = await noteService.generateDraft(aiTopic.trim());
+      setValue('content', result.generatedContent, { shouldValidate: true });
+      setShowAiInput(false);
+      setAiTopic('');
+    } catch (error) {
+      console.error('Error al generar borrador:', error);
+      setAiError('Error al generar el borrador. Intenta de nuevo.');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -185,12 +211,71 @@ export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteM
 
           {/* Contenido */}
           <div>
-            <label
-              htmlFor="content"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Contenido
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor="content"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Contenido
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowAiInput(!showAiInput)}
+                disabled={isSubmitting}
+                className="text-blue-600 bg-blue-50/80 hover:bg-blue-100 rounded-full px-3 py-1 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>✨</span>
+                <span>Asistente IA</span>
+              </button>
+            </div>
+
+            {/* Panel de IA con Glassmorphism */}
+            {showAiInput && (
+              <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/50 backdrop-blur-md border border-blue-100 rounded-2xl p-4 mb-4 animate-in slide-in-from-top-2 duration-300">
+                <div className="space-y-3">
+                  <div>
+                    <input
+                      type="text"
+                      value={aiTopic}
+                      onChange={(e) => setAiTopic(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleGenerateDraft();
+                        }
+                      }}
+                      placeholder="Ej: Ideas para los versos de dulce agonía..."
+                      disabled={isGenerating || isSubmitting}
+                      className="w-full px-4 py-2.5 text-sm bg-white/80 border border-blue-200/50 rounded-xl focus:bg-white focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
+                    />
+                  </div>
+                  
+                  {aiError && (
+                    <p className="text-xs text-red-600 font-medium">{aiError}</p>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleGenerateDraft}
+                    disabled={isGenerating || isSubmitting}
+                    className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <span>Generando magia...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>✨</span>
+                        <span>Generar</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
             <textarea
               id="content"
               {...register('content')}
