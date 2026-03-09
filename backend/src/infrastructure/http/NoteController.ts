@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import type { CreateNoteUseCase } from '@application/use-cases/CreateNoteUseCase';
-import type { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import type { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
 import type { UpdateNoteUseCase } from '@application/use-cases/UpdateNoteUseCase';
 import type { DeleteNoteUseCase } from '@application/use-cases/DeleteNoteUseCase';
@@ -9,7 +8,6 @@ import type { GenerateNoteDraftUseCase } from '@application/use-cases/GenerateNo
 export class NoteController {
   constructor(
     private readonly createNoteUseCase: CreateNoteUseCase,
-    private readonly autoTagNoteUseCase: AutoTagNoteUseCase,
     private readonly getNotesUseCase: GetNotesUseCase,
     private readonly updateNoteUseCase: UpdateNoteUseCase,
     private readonly deleteNoteUseCase: DeleteNoteUseCase,
@@ -54,23 +52,6 @@ export class NoteController {
     }
   }
 
-  async autoTag(req: Request<{ id: string }>, res: Response): Promise<void> {    
-    try {
-      const { id: noteId } = req.params;
-      if (!noteId) {
-        res.status(400).json({ message: 'El ID de la nota es requerido en la URL.' });
-        return;
-      }
-      const result = await this.autoTagNoteUseCase.execute({ noteId });
-      res.status(200).json(result);
-    } catch (error) {
-      if (error instanceof Error) {
-        res.status(400).json({ message: error.message });
-      } else {
-        res.status(500).json({ message: 'Error interno del servidor.' });
-      }
-    }
-  }
 
   async update(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {

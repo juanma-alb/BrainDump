@@ -112,12 +112,12 @@ export default function Dashboard() {
                 </Link>
               )}
               
-              <button
+              {user?.role === 'USER' &&(<button
                 onClick={handleOpenNewNoteModal}
                 className="rounded-full bg-blue-500 text-white px-6 py-2.5 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
               >
-                + Nueva Nota
-              </button>
+              + Nueva Nota
+              </button>)}
               
               <button
                 onClick={handleLogout}

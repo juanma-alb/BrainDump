@@ -38,24 +38,4 @@ Reglas estrictas de salida:
     }
   }
 
-  async generateTags(content: string): Promise<string[]> {
-    const prompt = `Lee el siguiente texto y extrae máximo 3 etiquetas clave.
-Devuelve ÚNICAMENTE un array de strings en formato JSON válido, sin texto adicional ni formato markdown.
-
-Texto: "${content}"`;
-
-    try {
-      const result = await this.model.generateContent(prompt);
-      const text = result.response.text().trim();
-      const parsed: unknown = JSON.parse(text);
-
-      if (!Array.isArray(parsed)) {
-        return [];
-      }
-
-      return parsed.filter((item): item is string => typeof item === "string");
-    } catch {
-      return [];
-    }
-  }
 }

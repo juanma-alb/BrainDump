@@ -317,7 +317,7 @@ export default function NoteModal({
                   type="button"
                   onClick={() => setShowAiInput(!showAiInput)}
                   disabled={isSubmitting}
-                  className="text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full px-3 py-1 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-blue-600 dark:text-blue-400 bg-blue-200/80 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full px-4.5 py-2.5 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span>✨</span>
                   <span>Asistente IA</span>
@@ -339,7 +339,7 @@ export default function NoteModal({
                             handleGenerateDraft();
                           }
                         }}
-                        placeholder="Ej: Ideas para los versos de dulce agonía..."
+                        placeholder="Ej: versos para una canción..."
                         disabled={isGenerating || isSubmitting}
                         className="w-full px-4 py-2.5 text-sm bg-white/80 dark:bg-slate-800/80 dark:text-white border border-blue-200/50 dark:border-slate-700/50 rounded-xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                       />

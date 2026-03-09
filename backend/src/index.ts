@@ -6,7 +6,6 @@ import { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
 import { UpdateNoteUseCase } from '@application/use-cases/UpdateNoteUseCase';
 import { DeleteNoteUseCase } from '@application/use-cases/DeleteNoteUseCase';
 import { MongoDbNoteRepository } from '@infrastructure/repositories/MongoDbNoteRepository';
-import { AutoTagNoteUseCase } from '@application/use-cases/AutoTagNoteUseCase';
 import { GeminiAiService } from '@infrastructure/ai-service/GeminiAiService';
 import { NoteController } from '@infrastructure/http/NoteController';
 import { MongoDbUserRepository } from '@infrastructure/repositories/MongoDbUserRepository';
@@ -41,7 +40,6 @@ async function main() {
 
   // Casos de uso
   const createNote = new CreateNoteUseCase(noteRepository);
-  const autoTagNote = new AutoTagNoteUseCase(noteRepository, aiService);
   const getNotes = new GetNotesUseCase(noteRepository);
   const updateNote = new UpdateNoteUseCase(noteRepository);
   const deleteNote = new DeleteNoteUseCase(noteRepository);
@@ -54,7 +52,7 @@ async function main() {
   const resetPassword = new ResetPasswordUseCase(userRepository, tokenService);
 
   // HTTP
-  const noteController = new NoteController(createNote, autoTagNote, getNotes, updateNote, deleteNote, generateNoteDraft);
+  const noteController = new NoteController(createNote,  getNotes, updateNote, deleteNote, generateNoteDraft);
   const authController = new AuthController(registerUser, loginUser, forgotPassword, resetPassword);
   const adminController = new AdminController(getUserProfile, getNotesByUsername);
   const server = new Server(noteController, authController, adminController);
