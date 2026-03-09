@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { noteService } from '../services/noteService';
 import NoteCard from '../components/NoteCard';
@@ -88,6 +88,15 @@ export default function Dashboard() {
             </div>
 
             <div className="flex items-center gap-3">
+              {user?.role === 'ADMIN' && (
+                <Link
+                  to="/admin"
+                  className="rounded-full bg-purple-50 text-purple-600 px-6 py-2.5 text-sm font-semibold hover:bg-purple-100 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Panel Admin
+                </Link>
+              )}
+              
               <button
                 onClick={handleOpenNewNoteModal}
                 className="rounded-full bg-blue-500 text-white px-6 py-2.5 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"

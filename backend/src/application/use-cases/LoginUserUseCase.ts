@@ -9,6 +9,13 @@ export interface LoginUserInput {
 
 export interface LoginUserOutput {
   token: string;
+  user: {
+    id: string;
+    email: string;
+    username: string;
+    role: string;
+    createdAt: Date;
+  };
 }
 
 /**
@@ -37,6 +44,15 @@ export class LoginUserUseCase {
       role: user.role,
     });
 
-    return { token };
+    return { 
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        createdAt: user.createdAt,
+      }
+    };
   }
 }

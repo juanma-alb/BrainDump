@@ -30,10 +30,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "userprueba",
-  "email": "userprueba@braindump.com",
-  "password": "supersecretpassword",
-  "role": "USER"
+  "username": "Admin2",
+  "email": "admin@asd.com",
+  "password": "admin2",
+  "role": "ADMIN"
 }
 
 ### 2. login
@@ -41,9 +41,9 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "userprueba",
-  "email": "userprueba@braindump.com",
-  "password": "supersecretpassword"
+  "username": "asd",
+  "email": "asd@asd.com",
+  "password": "asd123"
 }
 
 ### 3. Obtener Notas de un user (RBAC)
