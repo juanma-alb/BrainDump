@@ -83,7 +83,7 @@ export default function Dashboard() {
                 Mis Notas
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">
-                Hola, {user?.username} 👋
+                Hola, {user?.username} 
               </p>
             </div>
 

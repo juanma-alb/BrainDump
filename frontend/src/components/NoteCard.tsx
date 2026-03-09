@@ -15,6 +15,12 @@ export default function NoteCard({ note, onClick }: NoteCardProps) {
     }).format(date);
   };
 
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   return (
     <article
       onClick={onClick}
@@ -26,7 +32,7 @@ export default function NoteCard({ note, onClick }: NoteCardProps) {
         </h3>
         
         <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
-          {note.content}
+          {stripHtml(note.content)}
         </p>
 
         {note.tags.length > 0 && (
