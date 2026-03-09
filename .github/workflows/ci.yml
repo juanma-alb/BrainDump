@@ -1,36 +1,54 @@
-# Pipeline de CI/CD 
-
-name: CI
+name: BrainDump CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  test:
-    
+  backend-checks:
+    name: Backend Tests
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
-      # 1: Descarga el codigo del repositorio en el runner de GH Actions.
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      # 2: Instala y configura la version de Node.js especificada
       - name: Setup de Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
+          cache-dependency-path: './backend/package-lock.json'
 
-      # 3: Instala las dependencias de forma limpia y determinista
       - name: Instalación de dependencias
         run: npm ci
 
-      # 4: Ejecuta la suite de tests con Vitest en modo no interactivo (run)
       - name: Ejecución de tests
         run: npm run test:run
+
+  frontend-checks:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Setup de Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+
+      - name: Instalación de dependencias
+        run: npm ci
+
+      - name: Verificación de tipos y Build
+        run: npm run build
