@@ -58,6 +58,8 @@ export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteM
   }, [noteToEdit, setValue, reset]);
 
   const handleAddTag = () => {
+    if (localTags.length >= 5) return; 
+
     const trimmedTag = tagInput.trim();
     if (trimmedTag && !localTags.includes(trimmedTag)) {
       const newTags = [...localTags, trimmedTag];
@@ -293,12 +295,19 @@ export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteM
 
           {/* Tags */}
           <div>
-            <label
-              htmlFor="tags"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Etiquetas
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor="tags"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Etiquetas
+              </label>
+              {localTags.length >= 5 && (
+                <span className="text-xs text-amber-600 font-semibold bg-amber-50 px-2 py-1 rounded-md">
+                  Límite de 5 etiquetas alcanzado
+                </span>
+              )}
+            </div>
             <div className="flex gap-2 mb-3">
               <input
                 id="tags"
@@ -306,14 +315,14 @@ export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteM
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 px-5 py-3 text-sm bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
-                placeholder="Agregar etiqueta..."
-                disabled={isSubmitting}
+                className="flex-1 px-5 py-3 text-sm bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 disabled:opacity-50 disabled:bg-gray-100"
+                placeholder={localTags.length >= 5 ? "Límite de etiquetas alcanzado" : "Agregar etiqueta..."}
+                disabled={isSubmitting || localTags.length >= 5}
               />
               <button
                 type="button"
                 onClick={handleAddTag}
-                disabled={isSubmitting}
+                disabled={isSubmitting || localTags.length >= 5}
                 className="px-6 py-3 rounded-2xl bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 + Agregar
