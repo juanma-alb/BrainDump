@@ -1,0 +1,301 @@
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type { Note } from '../types/note';
+import { createNoteSchema, updateNoteSchema } from '../schemas/noteSchemas';
+import type { CreateNoteFormValues, UpdateNoteFormValues } from '../schemas/noteSchemas';
+import { noteService } from '../services/noteService';
+
+type UnifiedFormValues = {
+  title: string;
+  content: string;
+  tags: string[];
+};
+
+interface NoteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  noteToEdit?: Note;
+  onSave: () => void;
+}
+
+export default function NoteModal({ isOpen, onClose, noteToEdit, onSave }: NoteModalProps) {
+  const [tagInput, setTagInput] = useState('');
+  const [localTags, setLocalTags] = useState<string[]>([]);
+  
+  const isEditing = Boolean(noteToEdit);
+  const schema = isEditing ? updateNoteSchema : createNoteSchema;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    setValue,
+    setError,
+    clearErrors,
+  } = useForm<UnifiedFormValues>({
+    defaultValues: {
+      title: '',
+      content: '',
+      tags: [],
+    },
+  });
+
+  useEffect(() => {
+    if (noteToEdit) {
+      setValue('title', noteToEdit.title);
+      setValue('content', noteToEdit.content);
+      setValue('tags', noteToEdit.tags);
+      setLocalTags(noteToEdit.tags);
+    } else {
+      reset();
+      setLocalTags([]);
+    }
+  }, [noteToEdit, setValue, reset]);
+
+  const handleAddTag = () => {
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && !localTags.includes(trimmedTag)) {
+      const newTags = [...localTags, trimmedTag];
+      setLocalTags(newTags);
+      setValue('tags', newTags);
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    const newTags = localTags.filter((tag) => tag !== tagToRemove);
+    setLocalTags(newTags);
+    setValue('tags', newTags);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
+
+  const onSubmit = async (data: UnifiedFormValues) => {
+    try {
+      clearErrors();
+
+      const validation = schema.safeParse(data);
+
+      if (!validation.success) {
+        validation.error.issues.forEach((err) => {
+          if (err.path[0]) {
+            setError(err.path[0] as keyof UnifiedFormValues, { 
+              type: 'manual', 
+              message: err.message 
+            });
+          }
+        });
+        return;
+      }
+
+      if (isEditing && noteToEdit) {
+        await noteService.updateNote(noteToEdit.id, validation.data as UpdateNoteFormValues);
+      } else {
+        await noteService.createNote(validation.data as CreateNoteFormValues);
+      }
+      
+      onSave();
+      reset();
+      setLocalTags([]);
+      setTagInput('');
+      onClose();
+    } catch (error) {
+      console.error('Error al guardar la nota:', error);
+    }
+  };
+
+  const handleClose = () => {
+    if (!isSubmitting) {
+      reset();
+      setLocalTags([]);
+      setTagInput('');
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all animate-in fade-in duration-200"
+      onClick={handleClose}
+    >
+      <div
+        className="bg-white/90 backdrop-blur-xl border border-white/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-[2.5rem] w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-8 py-6 border-b border-gray-200/50">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+              {isEditing ? 'Editar Nota' : 'Nueva Nota'}
+            </h2>
+            <button
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Cerrar"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-6 space-y-6">
+          {/* Título */}
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Título
+            </label>
+            <input
+              id="title"
+              type="text"
+              {...register('title')}
+              className="w-full px-5 py-3.5 text-lg font-semibold bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
+              placeholder="Un título memorable..."
+              disabled={isSubmitting}
+            />
+            {errors.title && (
+              <p className="mt-2 text-sm text-red-600 font-medium">
+                {errors.title.message}
+              </p>
+            )}
+          </div>
+
+          {/* Contenido */}
+          <div>
+            <label
+              htmlFor="content"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Contenido
+            </label>
+            <textarea
+              id="content"
+              {...register('content')}
+              rows={8}
+              className="w-full px-5 py-3.5 text-base bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 resize-none placeholder:text-gray-400 leading-relaxed"
+              placeholder="Escribe tus ideas aquí..."
+              disabled={isSubmitting}
+            />
+            {errors.content && (
+              <p className="mt-2 text-sm text-red-600 font-medium">
+                {errors.content.message}
+              </p>
+            )}
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label
+              htmlFor="tags"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Etiquetas
+            </label>
+            <div className="flex gap-2 mb-3">
+              <input
+                id="tags"
+                type="text"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1 px-5 py-3 text-sm bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
+                placeholder="Agregar etiqueta..."
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                onClick={handleAddTag}
+                disabled={isSubmitting}
+                className="px-6 py-3 rounded-2xl bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                + Agregar
+              </button>
+            </div>
+
+            {localTags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {localTags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center gap-2 rounded-full bg-blue-50 text-blue-600 px-4 py-2 text-sm font-medium"
+                  >
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tag)}
+                      disabled={isSubmitting}
+                      className="hover:text-blue-800 transition-colors disabled:opacity-50"
+                      aria-label={`Eliminar etiqueta ${tag}`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Footer con botones */}
+          <div className="flex items-center justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Guardando...
+                </>
+              ) : (
+                <>{isEditing ? 'Actualizar Nota' : 'Crear Nota'}</>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

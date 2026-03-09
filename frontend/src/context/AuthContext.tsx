@@ -13,12 +13,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userStr = localStorage.getItem('user');
-    
-    if (token && userStr) {
-      const parsedUser = JSON.parse(userStr);
-      setUser(parsedUser);
+    try {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      
+      if (token && userStr) {
+        const parsedUser = JSON.parse(userStr);
+        
+        if (parsedUser && typeof parsedUser === 'object' && parsedUser.id) {
+          setUser(parsedUser);
+        } else {
+          localStorage.clear();
+        }
+      }
+    } catch (error) {
+      console.error('Error al restaurar sesión:', error);
+      localStorage.clear();
     }
   }, []);
 

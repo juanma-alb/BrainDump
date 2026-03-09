@@ -4,10 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-
-const Dashboard = () => (
-  <div className="p-8 text-2xl font-bold">Dashboard Privado (Solo Logueados)</div>
-)
+import Dashboard from './pages/Dashboard'
 
 function App() {
   return (
