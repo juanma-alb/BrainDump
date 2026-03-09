@@ -1,7 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:is(.dark *));
 
+/* Transición suave para el fondo de toda la aplicación */
+body {
+  @apply transition-colors duration-300 bg-slate-50 dark:bg-slate-900;
+}
 /* scrollbar elegante para el modal de notas*/
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px; 

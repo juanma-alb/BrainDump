@@ -73,7 +73,6 @@ export default function NoteModal({
   const handleDelete = async () => {
     if (!noteToEdit) return;
     
-    // Alerta de confirmación nativa
     if (window.confirm('¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.')) {
       try {
         await noteService.deleteNote(noteToEdit.id);
@@ -135,7 +134,6 @@ export default function NoteModal({
   const onSubmit = async (data: UnifiedFormValues) => {
     try {
       clearErrors();
-
       const validation = schema.safeParse(data);
 
       if (!validation.success) {
@@ -180,7 +178,6 @@ export default function NoteModal({
 
   const handleCancel = () => {
     if (viewMode === 'EDIT' && noteToEdit) {
-      // Restauramos los valores a su estado original antes de volver a la vista
       setValue("title", noteToEdit.title);
       setValue("content", noteToEdit.content);
       setValue("tags", noteToEdit.tags);
@@ -196,17 +193,17 @@ export default function NoteModal({
 
   return (
     <div
-      className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all animate-in fade-in duration-200"
+      className="fixed inset-0 bg-slate-900/40 dark:bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all animate-in fade-in duration-200"
       onClick={handleClose}
     >
       <div
-        className="bg-white/90 backdrop-blur-xl border border-white/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 custom-scrollbar"
+        className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 custom-scrollbar transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-200/50">
+        <div className="px-8 py-6 border-b border-gray-200/50 dark:border-slate-700/50 transition-colors">
           <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors">
               {viewMode === 'CREATE' && 'Nueva Nota'}
               {viewMode === 'EDIT' && 'Editar Nota'}
               {viewMode === 'VIEW' && 'Detalles de la Nota'}
@@ -214,7 +211,7 @@ export default function NoteModal({
             <button
               onClick={handleClose}
               disabled={isSubmitting}
-              className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Cerrar"
             >
               <svg
@@ -237,19 +234,19 @@ export default function NoteModal({
           /* MODO VISTA */
           <div className="px-8 py-6 space-y-8 animate-in fade-in duration-300">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-6">{noteToEdit.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{noteToEdit.title}</h1>
               <div 
-                className="prose prose-blue max-w-none text-gray-700"
+                className="prose prose-blue dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 transition-colors"
                 dangerouslySetInnerHTML={{ __html: noteToEdit.content }}
               />
             </div>
 
             {noteToEdit.tags.length > 0 && (
-              <div className="pt-6 border-t border-gray-100">
-                <h3 className="text-sm font-semibold text-gray-500 mb-3">Etiquetas</h3>
+              <div className="pt-6 border-t border-gray-100 dark:border-slate-700/50 transition-colors">
+                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">Etiquetas</h3>
                 <div className="flex flex-wrap gap-2">
                   {noteToEdit.tags.map((tag, index) => (
-                    <span key={index} className="rounded-full bg-blue-50 text-blue-600 px-4 py-2 text-sm font-medium">
+                    <span key={index} className="rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 text-sm font-medium transition-colors">
                       {tag}
                     </span>
                   ))}
@@ -257,18 +254,18 @@ export default function NoteModal({
               </div>
             )}
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+            {/* Footer de Vista */}
+            <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100 dark:border-slate-700/50 transition-colors">
               <button
                 onClick={handleDelete}
-                className="px-6 py-3 rounded-full bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-all duration-200 flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-semibold hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 flex items-center gap-2"
               >
                 Eliminar Nota
               </button>
               <div className="flex gap-3">
                 <button
                   onClick={handleClose}
-                  className="px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-all duration-200"
+                  className="px-6 py-3 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200"
                 >
                   Cerrar
                 </button>
@@ -282,13 +279,13 @@ export default function NoteModal({
             </div>
           </div>
         ) : (
-          /*  MODO EDICIÓN / CREACIÓN  */
+          /* MODO EDICIÓN / CREACIÓN  */
           <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-6 space-y-6 animate-in fade-in duration-300">
             {/* Título */}
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors"
               >
                 Título
               </label>
@@ -296,12 +293,12 @@ export default function NoteModal({
                 id="title"
                 type="text"
                 {...register("title")}
-                className="w-full px-5 py-3.5 text-lg font-semibold bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
+                className="w-full px-5 py-3.5 text-lg font-semibold bg-gray-50/50 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 placeholder="Un título memorable..."
                 disabled={isSubmitting}
               />
               {errors.title && (
-                <p className="mt-2 text-sm text-red-600 font-medium">
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">
                   {errors.title.message}
                 </p>
               )}
@@ -312,7 +309,7 @@ export default function NoteModal({
               <div className="flex items-center justify-between mb-2">
                 <label
                   htmlFor="content"
-                  className="block text-sm font-semibold text-gray-700"
+                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 transition-colors"
                 >
                   Contenido
                 </label>
@@ -320,7 +317,7 @@ export default function NoteModal({
                   type="button"
                   onClick={() => setShowAiInput(!showAiInput)}
                   disabled={isSubmitting}
-                  className="text-blue-600 bg-blue-50/80 hover:bg-blue-100 rounded-full px-3 py-1 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full px-3 py-1 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span>✨</span>
                   <span>Asistente IA</span>
@@ -329,7 +326,7 @@ export default function NoteModal({
 
               {/* Panel de IA */}
               {showAiInput && (
-                <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/50 backdrop-blur-md border border-blue-100 rounded-2xl p-4 mb-4 animate-in slide-in-from-top-2 duration-300">
+                <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-900/20 dark:to-indigo-900/20 backdrop-blur-md border border-blue-100 dark:border-slate-700/50 rounded-2xl p-4 mb-4 animate-in slide-in-from-top-2 duration-300">
                   <div className="space-y-3">
                     <div>
                       <input
@@ -344,12 +341,12 @@ export default function NoteModal({
                         }}
                         placeholder="Ej: Ideas para los versos de dulce agonía..."
                         disabled={isGenerating || isSubmitting}
-                        className="w-full px-4 py-2.5 text-sm bg-white/80 border border-blue-200/50 rounded-xl focus:bg-white focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400"
+                        className="w-full px-4 py-2.5 text-sm bg-white/80 dark:bg-slate-800/80 dark:text-white border border-blue-200/50 dark:border-slate-700/50 rounded-xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                       />
                     </div>
 
                     {aiError && (
-                      <p className="text-xs text-red-600 font-medium">
+                      <p className="text-xs text-red-600 dark:text-red-400 font-medium">
                         {aiError}
                       </p>
                     )}
@@ -385,7 +382,7 @@ export default function NoteModal({
                 disabled={isSubmitting}
               />
               {errors.content && (
-                <p className="mt-2 text-sm text-red-600 font-medium">
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">
                   {errors.content.message}
                 </p>
               )}
@@ -396,12 +393,12 @@ export default function NoteModal({
               <div className="flex items-center justify-between mb-2">
                 <label
                   htmlFor="tags"
-                  className="block text-sm font-semibold text-gray-700"
+                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 transition-colors"
                 >
                   Etiquetas
                 </label>
                 {localTags.length >= 5 && (
-                  <span className="text-xs text-amber-600 font-semibold bg-amber-50 px-2 py-1 rounded-md">
+                  <span className="text-xs text-amber-600 dark:text-amber-500 font-semibold bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-md">
                     Límite de 5 etiquetas alcanzado
                   </span>
                 )}
@@ -413,7 +410,7 @@ export default function NoteModal({
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 px-5 py-3 text-sm bg-gray-50/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 disabled:opacity-50 disabled:bg-gray-100"
+                  className="flex-1 px-5 py-3 text-sm bg-gray-50/50 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-slate-800"
                   placeholder={
                     localTags.length >= 5
                       ? "Límite de etiquetas alcanzado"
@@ -436,14 +433,14 @@ export default function NoteModal({
                   {localTags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center gap-2 rounded-full bg-blue-50 text-blue-600 px-4 py-2 text-sm font-medium"
+                      className="inline-flex items-center gap-2 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 text-sm font-medium transition-colors"
                     >
                       {tag}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
                         disabled={isSubmitting}
-                        className="hover:text-blue-800 transition-colors disabled:opacity-50"
+                        className="hover:text-blue-800 dark:hover:text-blue-300 transition-colors disabled:opacity-50"
                         aria-label={`Eliminar etiqueta ${tag}`}
                       >
                         <svg
@@ -471,7 +468,7 @@ export default function NoteModal({
                 type="button"
                 onClick={handleCancel} 
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>

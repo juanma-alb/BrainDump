@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext'; 
 import { adminService } from '../services/adminService';
 import NoteCard from '../components/NoteCard';
 import type { User } from '../types/auth';
@@ -9,6 +10,7 @@ import type { Note } from '../types/note';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme(); 
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchedUser, setSearchedUser] = useState<User | null>(null);
@@ -64,31 +66,48 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       {/* Top Navigation Bar - Estilo iOS */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-800 transition-colors duration-300 shadow-sm">
         <div className="max-w-7xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors">
                 Panel de Administración
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
-                El Inspector · {user?.username} 🔍
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 transition-colors">
+                Bienvenido · {user?.username} 
               </p>
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Botón de Tema (Sol / Luna) */}
+              <button
+                onClick={toggleTheme}
+                className="relative p-2.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-300 ease-out hover:scale-[1.05] active:scale-[0.95]"
+                aria-label="Alternar modo oscuro"
+              >
+                {theme === 'dark' ? (
+                  <svg className="w-5 h-5 animate-in spin-in duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 animate-in spin-in-[-180deg] duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+
               <button
                 onClick={() => navigate('/dashboard')}
-                className="rounded-full bg-gray-100 text-gray-700 px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
+                className="rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
               >
-                ← Mis Notas
+                ← Todas las notas
               </button>
               
               <button
                 onClick={handleLogout}
-                className="rounded-full bg-gray-100 text-gray-700 px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
+                className="rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
               >
                 Cerrar Sesión
               </button>
@@ -105,7 +124,7 @@ export default function AdminDashboard() {
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                 <svg
-                  className="h-6 w-6 text-gray-400"
+                  className="h-6 w-6 text-gray-400 dark:text-gray-500 transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -123,7 +142,7 @@ export default function AdminDashboard() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar usuario por username..."
-                className="w-full pl-16 pr-6 py-5 bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-lg placeholder-gray-400"
+                className="w-full pl-16 pr-32 py-5 bg-white/90 dark:bg-slate-800/90 dark:text-white backdrop-blur-xl border border-gray-200/50 dark:border-slate-700 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-lg placeholder-gray-400 dark:placeholder-gray-500"
               />
               <button
                 type="submit"
@@ -157,9 +176,9 @@ export default function AdminDashboard() {
           {/* Mensaje de Error */}
           {error && (
             <div className="max-w-2xl mx-auto mt-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl p-4 flex items-start gap-3 transition-colors">
                 <svg
-                  className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0"
+                  className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0 transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -171,7 +190,7 @@ export default function AdminDashboard() {
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <p className="text-red-600 text-sm font-medium">{error}</p>
+                <p className="text-red-600 dark:text-red-400 text-sm font-medium transition-colors">{error}</p>
               </div>
             </div>
           )}
@@ -181,7 +200,7 @@ export default function AdminDashboard() {
         {searchedUser && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Tarjeta de Usuario */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-[2rem] p-6 mb-8 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-[2rem] p-6 mb-8 border border-white/50 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-colors">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -190,17 +209,17 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors">
                       {searchedUser.username}
                     </h2>
-                    <p className="text-gray-600 text-sm mt-1">{searchedUser.email}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-1 transition-colors">{searchedUser.email}</p>
                   </div>
                 </div>
                 <span
-                  className={`rounded-full px-4 py-1.5 text-xs font-semibold ${
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
                     searchedUser.role === 'ADMIN'
-                      ? 'bg-purple-100 text-purple-600'
-                      : 'bg-blue-100 text-blue-600'
+                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                      : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                   }`}
                 >
                   {searchedUser.role}
@@ -208,13 +227,13 @@ export default function AdminDashboard() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-xs text-gray-500 font-medium mb-1">Usuario ID</p>
-                  <p className="text-sm text-gray-900 font-mono">{searchedUser.id}</p>
+                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 transition-colors">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 transition-colors">Usuario ID</p>
+                  <p className="text-sm text-gray-900 dark:text-white font-mono transition-colors">{searchedUser.id}</p>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-xs text-gray-500 font-medium mb-1">Fecha de Registro</p>
-                  <p className="text-sm text-gray-900">{formatDate(searchedUser.createdAt)}</p>
+                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 transition-colors">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 transition-colors">Fecha de Registro</p>
+                  <p className="text-sm text-gray-900 dark:text-white transition-colors">{formatDate(searchedUser.createdAt)}</p>
                 </div>
               </div>
             </div>
@@ -222,21 +241,21 @@ export default function AdminDashboard() {
             {/* Grid de Notas */}
             <div>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white transition-colors">
                   Notas del usuario
                 </h3>
-                <span className="text-sm text-gray-500 font-medium">
+                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium transition-colors">
                   {userNotes.length} {userNotes.length === 1 ? 'nota' : 'notas'}
                 </span>
               </div>
 
               {userNotes.length === 0 ? (
-                <div className="bg-white/60 backdrop-blur-lg rounded-[2rem] p-12 text-center border border-white/20">
+                <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg rounded-[2rem] p-12 text-center border border-white/20 dark:border-slate-700/50 transition-colors">
                   <div className="text-6xl mb-4">📝</div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
+                  <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                     Sin notas
                   </h4>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-400 transition-colors">
                     Este usuario no ha creado ninguna nota todavía
                   </p>
                 </div>
@@ -254,9 +273,9 @@ export default function AdminDashboard() {
         {/* Estado Inicial */}
         {!searchedUser && !loading && !error && (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-purple-100 rounded-full mb-6">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-6 transition-colors">
               <svg
-                className="w-12 h-12 text-purple-600"
+                className="w-12 h-12 text-purple-600 dark:text-purple-400 transition-colors"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -269,10 +288,10 @@ export default function AdminDashboard() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
               Busca un usuario
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400 transition-colors">
               Ingresa el username de un usuario para ver su información y notas
             </p>
           </div>
