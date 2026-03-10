@@ -8,6 +8,8 @@ import type {
 } from "../schemas/noteSchemas";
 import { noteService } from "../services/noteService";
 import RichTextEditor from "./RichTextEditor";
+import AiStarButton from './animations/AiStarButton';
+
 
 type UnifiedFormValues = {
   title: string;
@@ -271,7 +273,7 @@ export default function NoteModal({
                 </button>
                 <button
                   onClick={() => setViewMode('EDIT')}
-                  className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 transition-all duration-200"
+                  className="px-6 py-3 rounded-full bg-blue-400 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-500 transition-all duration-200"
                 >
                   Editar Nota
                 </button>
@@ -314,14 +316,32 @@ export default function NoteModal({
                   Contenido
                 </label>
                 <button
-                  type="button"
-                  onClick={() => setShowAiInput(!showAiInput)}
-                  disabled={isSubmitting}
-                  className="text-blue-600 dark:text-blue-400 bg-blue-200/80 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full px-4.5 py-2.5 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span>✨</span>
-                  <span>Asistente IA</span>
-                </button>
+  type="button"
+  onClick={() => setShowAiInput(!showAiInput)}
+  disabled={isSubmitting}
+  className="
+    group w-fit rounded-full px-4 py-2 text-sm font-semibold 
+    flex items-center justify-center gap-2 
+    transition-all duration-300 ease-out
+    disabled:opacity-50 disabled:cursor-not-allowed
+    border
+    
+    bg-blue-50/50 hover:bg-blue-200/60
+    text-blue-700 
+    border-blue-200 hover:border-blue-300
+    shadow-sm hover:shadow-md hover:shadow-blue-500/10
+    
+    dark:bg-indigo-950/30 dark:hover:bg-indigo-900/40
+    dark:text-indigo-300 
+    dark:border-indigo-800/50 dark:hover:border-indigo-700/80
+    dark:hover:shadow-lg dark:hover:shadow-indigo-900/20
+  "
+>
+  <span className="transition-transform duration-300 group-hover:scale-110 flex items-center">
+    <AiStarButton/>
+  </span>
+  <span>Asistente IA</span>
+</button>
               </div>
 
               {/* Panel de IA */}
@@ -352,23 +372,39 @@ export default function NoteModal({
                     )}
 
                     <button
-                      type="button"
-                      onClick={handleGenerateDraft}
-                      disabled={isGenerating || isSubmitting}
-                      className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {isGenerating ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          <span>Generando magia...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>✨</span>
-                          <span>Generar</span>
-                        </>
-                      )}
-                    </button>
+  type="button"
+  onClick={handleGenerateDraft}
+  disabled={isGenerating || isSubmitting}
+  className="
+    w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 
+    flex items-center justify-center gap-2
+    disabled:opacity-50 disabled:cursor-not-allowed 
+    
+  
+    bg-gradient-to-r from-blue-300 to-indigo-300 
+    text-blue-700 
+    shadow-lg shadow-blue-500/25 
+    hover:shadow-xl hover:shadow-blue-500/30 hover:from-blue-400 hover:to-indigo-400 
+    
+    dark:from-blue-900 dark:to-indigo-900 
+    dark:text-blue-200 
+    dark:shadow-black/50
+    dark:hover:from-blue-800 dark:hover:to-indigo-800
+  "
+>
+  {isGenerating ? (
+    <>
+      
+      <div className="w-4 h-4 border-2 border-current border-r-transparent rounded-full animate-spin"></div>
+      <span>Generando magia...</span>
+    </>
+  ) : (
+    <>
+      <span><AiStarButton/></span>
+      <span>Generar</span>
+    </>
+  )}
+</button>
                   </div>
                 </div>
               )}
@@ -422,7 +458,7 @@ export default function NoteModal({
                   type="button"
                   onClick={handleAddTag}
                   disabled={isSubmitting || localTags.length >= 5}
-                  className="px-6 py-3 rounded-2xl bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 rounded-2xl bg-blue-400 text-white text-sm font-semibold hover:bg-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   + Agregar
                 </button>
@@ -475,7 +511,7 @@ export default function NoteModal({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-blue-400 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-500 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>

@@ -6,6 +6,8 @@ import { noteService } from '../services/noteService';
 import NoteCard from '../components/NoteCard';
 import NoteModal from '../components/NoteModal';
 import type { Note } from '../types/note';
+import NoteAnimation from '../components/animations/NoteAnimation';
+
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -114,7 +116,7 @@ export default function Dashboard() {
               
               {user?.role === 'USER' &&(<button
                 onClick={handleOpenNewNoteModal}
-                className="rounded-full bg-blue-500 text-white px-6 py-2.5 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
+                className="rounded-full bg-blue-400 text-white px-6 py-2.5 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-500 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
               >
               + Nueva Nota
               </button>)}
@@ -148,7 +150,7 @@ export default function Dashboard() {
         ) : notes.length === 0 ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="text-6xl mb-4">📝</div>
+              <NoteAnimation/>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                 No tienes notas aún
               </h2>
@@ -157,7 +159,7 @@ export default function Dashboard() {
               </p>
               <button
                 onClick={handleOpenNewNoteModal}
-                className="rounded-full bg-blue-500 text-white px-6 py-3 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 transition-all duration-200"
+                className="rounded-full bg-blue-400 text-white px-6 py-3 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-500 transition-all duration-200"
               >
                 + Crear mi primera nota
               </button>
