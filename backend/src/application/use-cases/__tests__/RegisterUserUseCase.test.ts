@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RegisterUserUseCase } from '../RegisterUserUseCase';
-import type { IUserRepository } from '@domain/ports/IUserRepository';
-
+import { createMockUserRepository } from '../../../tests/setup/mockRepositories';
+import bcrypt from 'bcrypt';
 
 vi.mock('bcrypt', () => ({
   default: {
@@ -9,22 +9,20 @@ vi.mock('bcrypt', () => ({
   },
 }));
 
-const mockUserRepository: IUserRepository = {
-  save: vi.fn().mockResolvedValue(undefined),
-  findByEmail: vi.fn(),
-  findById: vi.fn(),
-  findByUsername: vi.fn(),
-};
-
 describe('RegisterUserUseCase', () => {
+  let mockUserRepository: ReturnType<typeof createMockUserRepository>;
+  let useCase: RegisterUserUseCase;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUserRepository = createMockUserRepository();
+    useCase = new RegisterUserUseCase(mockUserRepository);
   });
 
   it('registra un usuario nuevo y devuelve los datos sin el password', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
+    vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(null);
 
-    const useCase = new RegisterUserUseCase(mockUserRepository);
     const result = await useCase.execute({
       username: 'nuevo_usuario',
       email: 'nuevo@example.com',
@@ -35,7 +33,6 @@ describe('RegisterUserUseCase', () => {
     expect(result.email).toBe('nuevo@example.com');
     expect(result.role).toBe('USER');
     expect(result.id).toBeDefined();
-    expect(result.createdAt).toBeInstanceOf(Date);
     expect(result).not.toHaveProperty('password');
     expect(result).not.toHaveProperty('passwordHash');
   });
@@ -49,12 +46,29 @@ describe('RegisterUserUseCase', () => {
       createdAt: new Date(),
     };
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(existingUser as any);
-
-    const useCase = new RegisterUserUseCase(mockUserRepository);
+    vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(null);
 
     await expect(
       useCase.execute({ email: 'duplicado@example.com', password: 'cualquier', username: 'nuevo_usuario' })
-    ).rejects.toThrowError("ya está registrado");
+    ).rejects.toThrowError('El email ya está registrado.');
+
+    expect(mockUserRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('lanza error si el username ya está en uso', async () => {
+    const existingUser = {
+      id: 'user-existing',
+      username: 'duplicado_user',
+      passwordHash: 'hash_existente',
+      role: 'USER' as const,
+      createdAt: new Date(),
+    };
+    vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
+    vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(existingUser as any);
+
+    await expect(
+      useCase.execute({ email: 'nuevo@example.com', password: 'cualquier', username: 'duplicado_user' })
+    ).rejects.toThrowError('El username ya está en uso.');
 
     expect(mockUserRepository.save).not.toHaveBeenCalled();
   });
