@@ -6,12 +6,21 @@ export const noteService = {
   async getNotes(
     page = 1,
     limit = 10,
-    tag?: string
-  ): Promise<PaginatedResult<Note>> {
-    const params: Record<string, string | number> = { page, limit };
-    if (tag) {
-      params.tag = tag;
+    filters?: {
+      tag?: string;
+      search?: string;
+      isFavorite?: boolean;
+      startDate?: string;
+      endDate?: string;
     }
+  ): Promise<PaginatedResult<Note>> {
+    const params: Record<string, string | number | boolean> = { page, limit };
+    
+    if (filters?.tag) params.tag = filters.tag;
+    if (filters?.search) params.search = filters.search;
+    if (filters?.isFavorite !== undefined) params.isFavorite = filters.isFavorite;
+    if (filters?.startDate) params.startDate = filters.startDate;
+    if (filters?.endDate) params.endDate = filters.endDate;
     
     const response = await api.get<PaginatedResult<Note>>('/notes', { params });
     return response.data;
@@ -22,7 +31,7 @@ export const noteService = {
     return response.data;
   },
 
-  async updateNote(id: string, data: UpdateNoteFormValues): Promise<Note> {
+  async updateNote(id: string, data: UpdateNoteFormValues & { isFavorite?: boolean }): Promise<Note> {
     const response = await api.put<Note>(`/notes/${id}`, data);
     return response.data;
   },

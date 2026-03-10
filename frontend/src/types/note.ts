@@ -4,6 +4,7 @@ export interface Note {
   title: string;
   content: string;
   tags: string[];
+  isFavorite: boolean;
   createdAt: string;
   updatedAt: string;
 }
