@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
 
-  // Estados de Búsqueda y Filtros
+  // busqueda y filtros
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterFavorite, setFilterFavorite] = useState(false);
@@ -30,16 +30,16 @@ export default function Dashboard() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Efecto de Debounce para la búsqueda (espera 500ms antes de buscar)
+  // debounce
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setPage(1); // Reset a primera página al buscar
-    }, 500);
+      setPage(1); 
+    }, 350);
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset a primera página cuando cambian otros filtros
+  
   useEffect(() => {
     setPage(1);
   }, [filterFavorite, filterTag, startDate, endDate]);
@@ -189,9 +189,9 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-8 py-8">
         
-        {/* ================= BARRA DE BÚSQUEDA Y FILTROS ================= */}
+        {/* searchbar y filtros*/}
         <div className="mb-10 space-y-4">
-          {/* Barra de búsqueda principal */}
+          {/* searchbar */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,7 +203,7 @@ export default function Dashboard() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar notas por título o contenido..."
-              className="w-full pl-12 pr-4 py-4 bg-white/80 dark:bg-slate-800/80 dark:text-white backdrop-blur-md border border-gray-200/50 dark:border-slate-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+              className="w-full pl-12 pr-4 py-4 bg-white/80 dark:bg-slate-800/80 dark:text-white backdrop-blur-md border border-gray-200/50 dark:border-slate-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 placeholder-gray-400"
             />
           </div>
 

@@ -185,7 +185,7 @@ function ResetPassword() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 px-6 bg-gray-800 hover:bg-black text-white font-semibold rounded-2xl transition-all duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-[0_8px_20px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgb(37,99,235,0.3)] active:scale-[0.98]"
+                    className="w-full py-4 px-6 bg-gray-800 hover:bg-black text-white font-semibold rounded-2xl transition-all duration-200 disabled:bg-gray-800 disabled:cursor-not-allowed shadow-[0_8px_20px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgb(37,99,235,0.3)] active:scale-[0.98]"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center gap-2">
@@ -218,7 +218,7 @@ function ResetPassword() {
 
               <button
                 onClick={() => navigate('/login')}
-                className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all duration-200 shadow-[0_8px_20px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgb(37,99,235,0.3)] active:scale-[0.98]"
+                className="w-full py-4 px-6 bg-gray-800 hover:bg-black  text-white font-semibold rounded-2xl transition-all duration-200 shadow-[0_8px_20px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgb(37,99,235,0.3)] active:scale-[0.98]"
               >
                 Ir al Inicio de Sesión
               </button>

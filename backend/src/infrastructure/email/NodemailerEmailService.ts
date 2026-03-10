@@ -1,46 +1,71 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 import type { IEmailService } from '@domain/ports/IEmailService';
 import { logger } from '@infrastructure/logger/PinoLogger';
 
+// 1. Forzamos la carga de variables de entorno explícitamente aquí
+dotenv.config();
+
 export class NodemailerEmailService implements IEmailService {
-  private transporterPromise: Promise<nodemailer.Transporter>;
+  private transporter: nodemailer.Transporter;
 
   constructor() {
-    this.transporterPromise = this.createTransporter();
-  }
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
 
-  private async createTransporter(): Promise<nodemailer.Transporter> {
-    const testAccount = await nodemailer.createTestAccount();
+    // 2. CHIVATO (Debug): Esto nos dirá exactamente qué está leyendo Node
+    console.log(`\n📧 [Email Service] Iniciando conexión SMTP...`);
+    console.log(`   Host: ${SMTP_HOST}`);
+    console.log(`   User: ${SMTP_USER}`);
 
-    return nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
+      logger.error('Faltan credenciales SMTP en las variables de entorno.');
+    }
+
+    this.transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: Number(SMTP_PORT),
+      secure: false, // Debe ser false para el puerto 587
       auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
+        user: SMTP_USER,
+        pass: SMTP_PASS,
       },
+      // 3. OPTIMIZACIÓN OUTLOOK: A veces Microsoft rechaza conexiones si no se fuerza el protocolo TLS
+      tls: {
+        ciphers: 'SSLv3',
+        rejectUnauthorized: false // Útil en desarrollo para evitar errores de certificados locales
+      }
     });
   }
 
   async sendPasswordResetEmail(to: string, resetToken: string, userId: string): Promise<void> {
-    const transporter = await this.transporterPromise;
+    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const resetLink = `${baseUrl}/reset-password?token=${resetToken}&id=${userId}`;
+    const from = process.env.EMAIL_FROM || '"BrainDump App" <no-reply@braindump.dev>';
 
-    const resetLink = `http://localhost:5173/reset-password?token=${resetToken}&id=${userId}`;
+    try {
+      await this.transporter.sendMail({
+        from,
+        to,
+        subject: 'Recuperación de contraseña - BrainDump',
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <h2 style="color: #8b5cf6;">Restablecer contraseña</h2>
+            <p>Hola,</p>
+            <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en BrainDump.</p>
+            <p>Haz clic en el botón de abajo para crear una nueva contraseña:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${resetLink}" style="background-color: #8b5cf6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Restablecer mi contraseña</a>
+            </div>
+            <hr style="border: none; border-top: 1px solid #eaeaea; margin: 30px 0;" />
+            <p style="font-size: 12px; color: #999;">Este enlace expirará en 15 minutos. Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
+          </div>
+        `,
+      });
 
-    const info = await transporter.sendMail({
-      from: '"BrainDump App" <no-reply@braindump.dev>',
-      to,
-      subject: 'Recuperación de contraseña',
-      text: `Haz clic en el siguiente enlace para restablecer tu contraseña:\n\n${resetLink}\n\nEste enlace expirará en 15 minutos.`,
-      html: `
-        <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-        <p><a href="${resetLink}">${resetLink}</a></p>
-        <p><strong>Este enlace expirará en 15 minutos.</strong></p>
-      `,
-    });
-
-    logger.info(`Correo de recuperación enviado a: ${to}`);
-    logger.info(`URL de previsualización (Ethereal): ${nodemailer.getTestMessageUrl(info)}`);
+      logger.info(`Correo de recuperación enviado exitosamente a: ${to}`);
+    } catch (error) {
+      logger.error({ err: error }, `Error al enviar correo a: ${to}`);
+      throw new Error('No se pudo enviar el correo electrónico.');
+    }
   }
 }
