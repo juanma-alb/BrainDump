@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext'; 
+import { useTheme } from '../context/ThemeContext';
 import { noteService } from '../services/noteService';
 import NoteCard from '../components/NoteCard';
 import NoteModal from '../components/NoteModal';
@@ -11,7 +11,7 @@ import NoteAnimation from '../components/animations/NoteAnimation';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme(); 
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,10 +80,10 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors duration-300">
-                Mis Notas
-              </h1>
+                {user?.role === 'USER' ? 'Mis Notas' : 'Todas las notas'}              
+                </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 transition-colors duration-300">
-                Hola, {user?.username} 
+                Hola, {user?.username}
               </p>
             </div>
 
@@ -113,14 +113,14 @@ export default function Dashboard() {
                   Panel Admin
                 </Link>
               )}
-              
-              {user?.role === 'USER' &&(<button
+
+              {user?.role === 'USER' && (<button
                 onClick={handleOpenNewNoteModal}
                 className="rounded-full bg-blue-400 text-white px-6 py-2.5 text-sm font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-500 hover:shadow-[0_6px_16px_rgb(59,130,246,0.4)] transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
               >
-              + Nueva Nota
+                + Nueva Nota
               </button>)}
-              
+
               <button
                 onClick={handleLogout}
                 className="rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
@@ -150,7 +150,7 @@ export default function Dashboard() {
         ) : notes.length === 0 ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <NoteAnimation/>
+              <NoteAnimation />
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                 No tienes notas aún
               </h2>
@@ -195,11 +195,10 @@ export default function Dashboard() {
                       <button
                         key={pageNum}
                         onClick={() => setPage(pageNum)}
-                        className={`w-10 h-10 rounded-full text-sm font-semibold transition-all duration-200 ${
-                          pageNum === page
+                        className={`w-10 h-10 rounded-full text-sm font-semibold transition-all duration-200 ${pageNum === page
                             ? 'bg-blue-500 text-white shadow-[0_4px_12px_rgb(59,130,246,0.3)]'
                             : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-slate-700 shadow-sm'
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>

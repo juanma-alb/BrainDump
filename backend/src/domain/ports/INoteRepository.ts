@@ -5,6 +5,10 @@ export interface NoteFilters {
   limit: number;
   userId?: string;
   tag?: string;
+  isFavorite?: boolean; 
+  search?: string;      
+  startDate?: Date;     
+  endDate?: Date;
 }
 
 export interface PaginatedResult<T> {

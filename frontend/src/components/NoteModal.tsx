@@ -203,7 +203,7 @@ export default function NoteModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-200/50 dark:border-slate-700/50 transition-colors">
+        <div className="px-8 py-6 border-b border-gray-300 dark:border-slate-700/50 transition-colors">
           <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors">
               {viewMode === 'CREATE' && 'Nueva Nota'}
@@ -238,13 +238,13 @@ export default function NoteModal({
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{noteToEdit.title}</h1>
               <div 
-                className="prose prose-blue dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 transition-colors"
+                className="prose prose-blue dark:prose-invert max-w-none text-blue-700 dark:text-gray-300 transition-colors"
                 dangerouslySetInnerHTML={{ __html: noteToEdit.content }}
               />
             </div>
 
             {noteToEdit.tags.length > 0 && (
-              <div className="pt-6 border-t border-gray-100 dark:border-slate-700/50 transition-colors">
+              <div className="pt-6 border-t border-gray-300 dark:border-slate-700/50 transition-colors">
                 <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">Etiquetas</h3>
                 <div className="flex flex-wrap gap-2">
                   {noteToEdit.tags.map((tag, index) => (
@@ -257,7 +257,7 @@ export default function NoteModal({
             )}
 
             {/* Footer de Vista */}
-            <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100 dark:border-slate-700/50 transition-colors">
+            <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-300 dark:border-slate-700/50 transition-colors">
               <button
                 onClick={handleDelete}
                 className="px-6 py-3 rounded-full bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-semibold hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 flex items-center gap-2"
@@ -295,8 +295,8 @@ export default function NoteModal({
                 id="title"
                 type="text"
                 {...register("title")}
-                className="w-full px-5 py-3.5 text-lg font-semibold bg-gray-50/50 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                placeholder="Un título memorable..."
+                className="w-full px-5 py-3.5 text-lg bg-gray-300/30 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                placeholder="Agregar un título..."
                 disabled={isSubmitting}
               />
               {errors.title && (
@@ -359,7 +359,7 @@ export default function NoteModal({
                             handleGenerateDraft();
                           }
                         }}
-                        placeholder="Ej: versos para una canción..."
+                        placeholder="Escríbe una idea aquí y la IA generará un borrador por tí..."
                         disabled={isGenerating || isSubmitting}
                         className="w-full px-4 py-2.5 text-sm bg-white/80 dark:bg-slate-800/80 dark:text-white border border-blue-200/50 dark:border-slate-700/50 rounded-xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                       />
@@ -376,7 +376,7 @@ export default function NoteModal({
   onClick={handleGenerateDraft}
   disabled={isGenerating || isSubmitting}
   className="
-    w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 
+    w-fit min-w-[250px] mx-auto px-8 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 
     flex items-center justify-center gap-2
     disabled:opacity-50 disabled:cursor-not-allowed 
     
@@ -446,7 +446,7 @@ export default function NoteModal({
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 px-5 py-3 text-sm bg-gray-50/50 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-slate-800"
+                  className="flex-1 px-5 py-3 text-sm bg-gray-300/30 dark:bg-slate-900/50 dark:text-white border-2 border-transparent dark:border-slate-700 rounded-2xl focus:bg-white dark:focus:bg-slate-800 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-slate-800"
                   placeholder={
                     localTags.length >= 5
                       ? "Límite de etiquetas alcanzado"

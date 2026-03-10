@@ -7,6 +7,7 @@ export interface UpdateNoteInput {
   title?: string;
   content?: string;
   tags?: string[];
+  isFavorite?: boolean;
 }
 
 /*
@@ -32,6 +33,7 @@ export class UpdateNoteUseCase {
       title: input.title ?? existing.title,
       content: input.content ?? existing.content,
       tags: input.tags ?? existing.tags,
+      isFavorite: input.isFavorite ?? existing.isFavorite,
       createdAt: existing.createdAt,
       updatedAt: new Date(),
     });

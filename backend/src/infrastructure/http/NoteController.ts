@@ -38,10 +38,33 @@ export class NoteController {
       const limitNum = Number(req.query.limit);
       const tag = req.query.tag as string | undefined;
 
+      const search = req.query.search as string | undefined;
+      const isFavoriteQuery = req.query.isFavorite as string | undefined;
+      const startDateString = req.query.startDate as string | undefined;
+      const endDateString = req.query.endDate as string | undefined;
+
       const page = !isNaN(pageNum) && pageNum > 0 ? pageNum : undefined;
       const limit = !isNaN(limitNum) && limitNum > 0 ? limitNum : undefined;
+      
+      let isFavorite: boolean | undefined = undefined;
+      if (isFavoriteQuery === 'true') isFavorite = true;
+      if (isFavoriteQuery === 'false') isFavorite = false;
 
-      const result = await this.getNotesUseCase.execute({ userId, role, page, limit, tag });
+      const startDate = startDateString ? new Date(startDateString) : undefined;
+      const endDate = endDateString ? new Date(endDateString) : undefined;
+
+      const result = await this.getNotesUseCase.execute({ 
+        userId, 
+        role, 
+        page, 
+        limit, 
+        tag,
+        search,
+        isFavorite,
+        startDate,
+        endDate
+      });
+      
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {
@@ -52,13 +75,20 @@ export class NoteController {
     }
   }
 
-
   async update(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const noteId = req.params.id;
       const userId = req.user!.id;
-      const { title, content, tags } = req.body;
-      const result = await this.updateNoteUseCase.execute({ noteId, userId, title, content, tags });
+      const { title, content, tags, isFavorite } = req.body; 
+      
+      const result = await this.updateNoteUseCase.execute({ 
+        noteId, 
+        userId, 
+        title, 
+        content, 
+        tags, 
+        isFavorite
+      });
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {

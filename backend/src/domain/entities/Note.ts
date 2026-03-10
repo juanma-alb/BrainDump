@@ -4,6 +4,7 @@ export interface NoteProps {
   title: string;
   content: string;
   tags: string[];
+  isFavorite?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +16,7 @@ export class Note {
   readonly title: string;
   readonly content: string;
   readonly tags: string[];
+  readonly isFavorite: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -24,6 +26,7 @@ export class Note {
     this.title = props.title;
     this.content = props.content;
     this.tags = props.tags;
+    this.isFavorite = props.isFavorite ?? false;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }
@@ -38,7 +41,10 @@ export class Note {
     if (!props.content.trim()) {
       throw new Error('El contenido de una nota no puede estar vacío.');
     }
-    return new Note(props);
+    return new Note({
+      ...props,
+      isFavorite: props.isFavorite ?? false, 
+    });
   }
 
   withUpdatedContent(newContent: string): Note {

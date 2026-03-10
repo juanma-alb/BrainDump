@@ -6,6 +6,7 @@ interface INoteDocument {
   title: string;
   content: string;
   tags: string[];
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +18,7 @@ const noteSchema = new Schema<INoteDocument>(
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: { type: [String], default: [] },
+    isFavorite: { type: Boolean, default: false }
   },
   {
     timestamps: true,

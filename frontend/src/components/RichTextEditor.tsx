@@ -38,7 +38,7 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
   }
 
   return (
-    <div className={`flex flex-col border-2 rounded-2xl overflow-hidden transition-all duration-200 ${disabled ? 'opacity-50' : 'bg-gray-50/50 dark:bg-slate-900/50 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:border-blue-500 border-transparent dark:border-slate-700'}`}>
+    <div className={`flex flex-col border-2 rounded-2xl overflow-hidden transition-all duration-200 ${disabled ? 'opacity-50' : 'bg-gray-200 dark:bg-slate-900/50 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:border-blue-500 border-transparent dark:border-slate-700'}`}>
       {/* Barra de Herramientas */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md transition-colors">
         <button
