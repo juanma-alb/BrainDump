@@ -29,7 +29,11 @@ function Login() {
       setError('');
       const response = await authService.login(data);
       login(response);
-      navigate('/dashboard');
+      if (response.user?.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Credenciales inválidas');
     }

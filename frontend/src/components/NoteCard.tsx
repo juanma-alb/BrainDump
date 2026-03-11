@@ -1,12 +1,15 @@
 import type { Note } from '../types/note';
+import { useAuth } from '../context/AuthContext';
 
 interface NoteCardProps {
   note: Note;
   onClick?: () => void;
-  onToggleFavorite?: (note: Note) => void; // NUEVA PROP
+  onToggleFavorite?: (note: Note) => void; 
 }
 
 export default function NoteCard({ note, onClick, onToggleFavorite }: NoteCardProps) {
+const { user} = useAuth();
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-ES', {
@@ -28,7 +31,7 @@ export default function NoteCard({ note, onClick, onToggleFavorite }: NoteCardPr
       className="relative bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg border border-white/20 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] cursor-pointer group"
     >
       {/* Botón de Favorito en la esquina superior derecha */}
-      {onToggleFavorite && (
+      {onToggleFavorite && user?.role === 'USER' && (
         <button
           onClick={(e) => {
             e.stopPropagation(); 
@@ -74,9 +77,17 @@ export default function NoteCard({ note, onClick, onToggleFavorite }: NoteCardPr
           </div>
         )}
 
-        <time className="text-xs text-gray-400 dark:text-gray-500 font-medium transition-colors">
-          {formatDate(note.updatedAt)}
-        </time>
+        <div className="flex items-center justify-between mt-2 border-t border-gray-100 dark:border-slate-700/30 pt-3">
+          <time className="text-xs text-gray-400 dark:text-gray-500 font-medium transition-colors">
+            {formatDate(note.updatedAt)}
+          </time>
+          
+          {note.authorUsername && user?.role === 'ADMIN' && (
+            <span className="text-xs font-semibold bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 px-2.5 py-1 rounded-full border border-purple-100 dark:border-purple-800/30 transition-colors">
+              @{note.authorUsername}
+            </span>
+          )}
+        </div>
       </div>
     </article>
   );

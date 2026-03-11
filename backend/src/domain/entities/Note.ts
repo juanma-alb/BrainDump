@@ -5,6 +5,7 @@ export interface NoteProps {
   content: string;
   tags: string[];
   isFavorite?: boolean;
+  authorUsername?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +18,7 @@ export class Note {
   readonly content: string;
   readonly tags: string[];
   readonly isFavorite: boolean;
+  readonly authorUsername?: string; 
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -27,6 +29,7 @@ export class Note {
     this.content = props.content;
     this.tags = props.tags;
     this.isFavorite = props.isFavorite ?? false;
+    this.authorUsername = props.authorUsername; 
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

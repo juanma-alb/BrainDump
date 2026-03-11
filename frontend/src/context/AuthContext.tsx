@@ -10,7 +10,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // Inicialización sincrónica: Leemos el localStorage en el primer microsegundo
   const [user, setUser] = useState<User | null>(() => {
     try {
       const token = localStorage.getItem('token');

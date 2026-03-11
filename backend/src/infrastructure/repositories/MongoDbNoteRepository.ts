@@ -79,10 +79,31 @@ export class MongoDbNoteRepository implements INoteRepository {
     const skip = (filters.page - 1) * filters.limit;
 
     const [docs, total] = await Promise.all([
-      NoteModel.find(query)
-        .sort({ isFavorite: -1, createdAt: -1 }) 
-        .skip(skip)
-        .limit(filters.limit),
+      NoteModel.aggregate([
+        { $match: query },
+        { $sort: { isFavorite: -1, createdAt: -1 } },
+        { $skip: skip },
+        { $limit: filters.limit },
+        {
+          $lookup: {
+            from: 'users', 
+            localField: 'userId',
+            foreignField: 'id',
+            as: 'userDoc'
+          }
+        },
+        {
+          $unwind: {
+            path: '$userDoc',
+            preserveNullAndEmptyArrays: true 
+          }
+        },
+        {
+          $addFields: {
+            authorUsername: '$userDoc.username' 
+          }
+        }
+      ]),
       NoteModel.countDocuments(query),
     ]);
 
@@ -106,6 +127,7 @@ export class MongoDbNoteRepository implements INoteRepository {
       content: doc.content,
       tags: doc.tags,
       isFavorite: doc.isFavorite ?? false,
+      authorUsername: doc.authorUsername,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     });
