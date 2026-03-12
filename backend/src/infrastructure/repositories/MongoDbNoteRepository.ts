@@ -39,6 +39,11 @@ export class MongoDbNoteRepository implements INoteRepository {
     return docs.map(this.mapToDomain);
   }
 
+  async getUserTags(userId: string): Promise<string[]> {
+    const tags = await NoteModel.distinct('tags', { userId });
+    return tags.sort((a, b) => a.localeCompare(b)); 
+  }
+
   async update(note: Note): Promise<void> {
     await NoteModel.updateOne(
       { id: note.id },

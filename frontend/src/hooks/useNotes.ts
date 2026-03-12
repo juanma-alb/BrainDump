@@ -9,6 +9,8 @@ export function useNotes() {
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+
   // Estados de Búsqueda y Filtros
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -26,15 +28,26 @@ export function useNotes() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset page cuando cambian los filtros
   useEffect(() => {
     setPage(1);
   }, [filterFavorite, filterTag, startDate, endDate]);
+
+  const fetchTags = useCallback(async () => {
+    try {
+      const tags = await noteService.getTags();
+      setAvailableTags(tags);
+    } catch (err) {
+      console.error('Error al cargar etiquetas disponibles:', err);
+    }
+  }, []);
 
   const fetchNotes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+      
+      fetchTags(); 
+
       const result = await noteService.getNotes(page, 9, {
         search: debouncedSearch || undefined,
         isFavorite: filterFavorite ? true : undefined,
@@ -50,7 +63,7 @@ export function useNotes() {
     } finally {
       setLoading(false);
     }
-  }, [page, debouncedSearch, filterFavorite, filterTag, startDate, endDate]);
+  }, [page, debouncedSearch, filterFavorite, filterTag, startDate, endDate, fetchTags]);
 
   useEffect(() => {
     fetchNotes();
@@ -82,6 +95,7 @@ export function useNotes() {
     notes, loading, error, page, totalPages, setPage,
     searchQuery, setSearchQuery, filterFavorite, setFilterFavorite,
     filterTag, setFilterTag, startDate, setStartDate, endDate, setEndDate,
+    availableTags, 
     handleToggleFavorite, fetchNotes
   };
 }

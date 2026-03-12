@@ -30,6 +30,7 @@ export interface INoteRepository {
   findAll(): Promise<Note[]>;
   findByUserId(userId: string): Promise<Note[]>;
   findByTag(tag: string): Promise<Note[]>;
+  getUserTags(userId: string): Promise<string[]>;
   update(note: Note): Promise<void>;
   delete(id: string): Promise<void>;
   findMany(filters: NoteFilters): Promise<PaginatedResult<Note>>;

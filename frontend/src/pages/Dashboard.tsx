@@ -13,7 +13,7 @@ export default function Dashboard() {
     notes, loading, error, page, totalPages, setPage,
     searchQuery, setSearchQuery, filterFavorite, setFilterFavorite,
     filterTag, setFilterTag, startDate, setStartDate, endDate, setEndDate,
-    handleToggleFavorite, fetchNotes
+    availableTags, handleToggleFavorite, fetchNotes
   } = useNotes();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +36,7 @@ export default function Dashboard() {
           filterTag={filterTag} setFilterTag={setFilterTag}
           startDate={startDate} setStartDate={setStartDate}
           endDate={endDate} setEndDate={setEndDate}
+          availableTags={availableTags}
         />
 
         {loading && notes.length === 0 ? (

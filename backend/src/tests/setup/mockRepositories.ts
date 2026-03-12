@@ -14,6 +14,7 @@ export const createMockNoteRepository = (): INoteRepository => ({
   update: vi.fn(),
   delete: vi.fn(),
   findMany: vi.fn(),
+  getUserTags: vi.fn(),
 });
 
 export const createMockUserRepository = (): IUserRepository => ({

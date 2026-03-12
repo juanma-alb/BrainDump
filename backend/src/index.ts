@@ -21,6 +21,7 @@ import { ForgotPasswordUseCase } from '@application/use-cases/ForgotPasswordUseC
 import { ResetPasswordUseCase } from '@application/use-cases/ResetPasswordUseCase';
 import { NodemailerEmailService } from '@infrastructure/email/NodemailerEmailService';
 import { Server } from '@infrastructure/http/Server';
+import { GetUserTagsUseCase } from '@application/use-cases/GetUserTagsUseCase';
 
 async function main() {
   const mongoUri = process.env.MONGODB_URI;
@@ -43,6 +44,7 @@ async function main() {
   const getNotes = new GetNotesUseCase(noteRepository);
   const updateNote = new UpdateNoteUseCase(noteRepository);
   const deleteNote = new DeleteNoteUseCase(noteRepository);
+  const getTags = new GetUserTagsUseCase(noteRepository);
   const registerUser = new RegisterUserUseCase(userRepository);
   const loginUser = new LoginUserUseCase(userRepository, tokenService);
   const getUserProfile = new GetUserProfileUseCase(userRepository);
@@ -52,7 +54,7 @@ async function main() {
   const resetPassword = new ResetPasswordUseCase(userRepository, tokenService);
 
   // HTTP
-  const noteController = new NoteController(createNote,  getNotes, updateNote, deleteNote, generateNoteDraft);
+  const noteController = new NoteController(createNote,  getNotes, updateNote, deleteNote, generateNoteDraft, getTags);
   const authController = new AuthController(registerUser, loginUser, forgotPassword, resetPassword);
   const adminController = new AdminController(getUserProfile, getNotesByUsername);
   const server = new Server(noteController, authController, adminController);

@@ -4,6 +4,7 @@ import type { GetNotesUseCase } from '@application/use-cases/GetNotesUseCase';
 import type { UpdateNoteUseCase } from '@application/use-cases/UpdateNoteUseCase';
 import type { DeleteNoteUseCase } from '@application/use-cases/DeleteNoteUseCase';
 import type { GenerateNoteDraftUseCase } from '@application/use-cases/GenerateNoteDraftUseCase';
+import type { GetUserTagsUseCase } from '@application/use-cases/GetUserTagsUseCase'; 
 
 export class NoteController {
   constructor(
@@ -11,7 +12,8 @@ export class NoteController {
     private readonly getNotesUseCase: GetNotesUseCase,
     private readonly updateNoteUseCase: UpdateNoteUseCase,
     private readonly deleteNoteUseCase: DeleteNoteUseCase,
-    private readonly generateNoteDraftUseCase: GenerateNoteDraftUseCase
+    private readonly generateNoteDraftUseCase: GenerateNoteDraftUseCase,
+    private readonly getUserTagsUseCase: GetUserTagsUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -120,6 +122,20 @@ export class NoteController {
       const { topic } = req.body;
       const result = await this.generateNoteDraftUseCase.execute({ topic });
       res.status(200).json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor.' });
+      }
+    }
+  }
+
+  async getTags(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.user!.id;
+      const tags = await this.getUserTagsUseCase.execute(userId);
+      res.status(200).json(tags);
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });

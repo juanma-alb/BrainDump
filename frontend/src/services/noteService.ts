@@ -26,6 +26,11 @@ export const noteService = {
     return response.data;
   },
 
+  async getTags(): Promise<string[]> {
+    const response = await api.get<string[]>('/notes/tags');
+    return response.data;
+  },
+
   async createNote(data: CreateNoteFormValues): Promise<Note> {
     const response = await api.post<Note>('/notes', data);
     return response.data;
