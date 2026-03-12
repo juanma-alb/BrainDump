@@ -1,4 +1,3 @@
-// src/hooks/useNoteModal.ts
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Note } from "../types/note";

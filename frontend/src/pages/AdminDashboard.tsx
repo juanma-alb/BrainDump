@@ -1,4 +1,3 @@
-// src/pages/AdminDashboard.tsx
 import { useState } from 'react';
 import { useAdminDashboard } from '../hooks/useAdminDashboard';
 import AdminHeader from '../components/admin/AdminHeader';

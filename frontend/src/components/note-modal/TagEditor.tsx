@@ -1,4 +1,3 @@
-// src/components/note-modal/TagEditor.tsx
 interface TagEditorProps {
   localTags: string[];
   tagInput: string;

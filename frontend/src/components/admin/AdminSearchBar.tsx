@@ -1,4 +1,3 @@
-// src/components/admin/AdminSearchBar.tsx
 import type { FormEvent } from 'react';
 
 interface AdminSearchBarProps {

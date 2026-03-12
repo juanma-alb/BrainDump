@@ -6,16 +6,14 @@ import type { ISourceOptions } from "@tsparticles/engine";
 const ParticleBackground = () => {
   const [init, setInit] = useState(false);
 
-  // Inicializamos el motor de partículas una sola vez
   useEffect(() => {
     initParticlesEngine(async (engine) => {
-      await loadSlim(engine); // Usamos slim para que cargue súper rápido
+      await loadSlim(engine); 
     }).then(() => {
       setInit(true);
     });
   }, []);
 
-  // Configuramos el diseño y comportamiento de las partículas
   const options: ISourceOptions = useMemo(() => ({
     fullScreen: { enable: false },
     background: {
@@ -45,11 +43,9 @@ const ParticleBackground = () => {
       move: {
         enable: true,
         speed: 1.2, 
-        // Agregamos 'as const' para decirle a TS que esto es un valor exacto, no un string cualquiera
         direction: "none" as const, 
         random: false,
         straight: false,
-        // Hacemos lo mismo aquí
         outModes: { default: "bounce" as const }, 
       },
       number: {
@@ -67,9 +63,6 @@ const ParticleBackground = () => {
       <Particles
         id="tsparticles"
         options={options}
-        // EL FIX ESTÁ AQUÍ: Cambiamos -z-10 por z-0
-        // Como el contenido de tu login tiene z-10, las partículas (z-0) se quedarán al fondo 
-        // pero POR DELANTE del color oscuro/claro de la pantalla.
         className="absolute inset-0 z-0 h-full w-full"
       />
     );

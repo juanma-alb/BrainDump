@@ -1,4 +1,3 @@
-// src/hooks/useAdminDashboard.ts
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { adminService } from '../services/adminService';

@@ -30,7 +30,7 @@ const { user} = useAuth();
       onClick={onClick}
       className="relative bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg border border-white/20 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] cursor-pointer group"
     >
-      {/* Botón de Favorito en la esquina superior derecha */}
+      {/* Botón de Favorito*/}
       {onToggleFavorite && user?.role === 'USER' && (
         <button
           onClick={(e) => {

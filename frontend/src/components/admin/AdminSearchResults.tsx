@@ -1,4 +1,3 @@
-// src/components/admin/AdminSearchResults.tsx
 import type { User } from '../../types/auth';
 import type { Note } from '../../types/note';
 import NoteCard from '../NoteCard';

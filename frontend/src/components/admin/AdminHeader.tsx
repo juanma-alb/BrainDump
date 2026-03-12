@@ -1,4 +1,3 @@
-// src/components/admin/AdminHeader.tsx
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';

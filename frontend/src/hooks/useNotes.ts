@@ -1,4 +1,3 @@
-// src/hooks/useNotes.ts
 import { useState, useEffect, useCallback } from 'react';
 import { noteService } from '../services/noteService';
 import type { Note } from '../types/note';

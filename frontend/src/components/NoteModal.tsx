@@ -1,4 +1,3 @@
-// src/components/NoteModal.tsx
 import type { Note } from "../types/note";
 import { useNoteModal } from "../hooks/useNoteModal";
 import RichTextEditor from "./RichTextEditor";
