@@ -33,7 +33,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       <AdminHeader />
 
-      <main className="max-w-7xl mx-auto px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12">
         <AdminSearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -52,16 +52,16 @@ export default function AdminDashboard() {
 
         {/* Estado Inicial */}
         {!searchedUser && !loading && !error && (
-          <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-6 transition-colors">
-              <svg className="w-12 h-12 text-purple-600 dark:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center py-10 md:py-20 px-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 md:w-24 md:h-24 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-4 md:mb-6 transition-colors">
+              <svg className="w-8 h-8 md:w-12 md:h-12 text-purple-600 dark:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
               Busca un usuario
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 transition-colors">
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 transition-colors">
               Ingresa el username de un usuario para ver su información y notas
             </p>
           </div>

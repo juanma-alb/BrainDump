@@ -10,13 +10,13 @@ export default function AuthLayout() {
       
       <ParticleBackground />
       
-      {/*  luz ambiental */}
+      {/* luz ambiental */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 dark:bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-400/20 dark:bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
 
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 z-50 p-3 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-2.5 sm:p-3 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
         aria-label="Alternar modo oscuro"
       >
         {theme === 'dark' ? (
@@ -30,7 +30,7 @@ export default function AuthLayout() {
         )}
       </button>
 
-      <div className="relative z-10 w-full max-w-md px-6">
+      <div className="relative z-10 w-full max-w-md px-4 sm:px-6">
         <Outlet />
       </div>
     </div>

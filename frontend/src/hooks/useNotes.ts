@@ -8,7 +8,6 @@ export function useNotes() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState<string | null>(null);
-
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
   // Estados de Búsqueda y Filtros
@@ -16,8 +15,8 @@ export function useNotes() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterFavorite, setFilterFavorite] = useState(false);
   const [filterTag, setFilterTag] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  
+  const [dateFilter, setDateFilter] = useState(''); 
 
   // Debounce
   useEffect(() => {
@@ -30,7 +29,7 @@ export function useNotes() {
 
   useEffect(() => {
     setPage(1);
-  }, [filterFavorite, filterTag, startDate, endDate]);
+  }, [filterFavorite, filterTag, dateFilter]);
 
   const fetchTags = useCallback(async () => {
     try {
@@ -48,13 +47,29 @@ export function useNotes() {
       
       fetchTags(); 
 
+      
+      let computedStartDate: string | undefined = undefined;
+      if (dateFilter) {
+        const date = new Date();
+        if (dateFilter === 'Hoy') {
+          date.setHours(0, 0, 0, 0);
+        } else if (dateFilter === 'Esta semana') {
+          date.setDate(date.getDate() - 7);
+        } else if (dateFilter === 'Este mes') {
+          date.setMonth(date.getMonth() - 1);
+        } else if (dateFilter === 'Este año') {
+          date.setFullYear(date.getFullYear() - 1);
+        }
+        computedStartDate = date.toISOString();
+      }
+
       const result = await noteService.getNotes(page, 9, {
         search: debouncedSearch || undefined,
         isFavorite: filterFavorite ? true : undefined,
         tag: filterTag || undefined,
-        startDate: startDate || undefined,
-        endDate: endDate || undefined,
+        startDate: computedStartDate, 
       });
+      
       setNotes(result.items);
       setTotalPages(result.totalPages);
     } catch (err) {
@@ -63,7 +78,7 @@ export function useNotes() {
     } finally {
       setLoading(false);
     }
-  }, [page, debouncedSearch, filterFavorite, filterTag, startDate, endDate, fetchTags]);
+  }, [page, debouncedSearch, filterFavorite, filterTag, dateFilter, fetchTags]);
 
   useEffect(() => {
     fetchNotes();
@@ -94,8 +109,7 @@ export function useNotes() {
   return {
     notes, loading, error, page, totalPages, setPage,
     searchQuery, setSearchQuery, filterFavorite, setFilterFavorite,
-    filterTag, setFilterTag, startDate, setStartDate, endDate, setEndDate,
-    availableTags, 
-    handleToggleFavorite, fetchNotes
+    filterTag, setFilterTag, dateFilter, setDateFilter, 
+    availableTags, handleToggleFavorite, fetchNotes
   };
 }

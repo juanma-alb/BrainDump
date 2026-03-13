@@ -50,7 +50,7 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
       title={title}
       onClick={onClick}
       disabled={disabled}
-      className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm transition-all ${
+      className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-sm transition-all ${
         isActive 
           ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 shadow-sm' 
           : 'text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm'
@@ -61,17 +61,17 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
   );
 
   const Divider = () => (
-    <div className="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 rounded-full transition-colors"></div>
+    <div className="shrink-0 w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 rounded-full transition-colors"></div>
   );
 
   return (
-    <div className={`flex flex-col border-2 rounded-2xl overflow-hidden transition-all duration-200 ${
+    <div className={`flex flex-col border-2 rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-200 ${
         disabled 
           ? 'opacity-50' 
           : 'bg-gray-50 dark:bg-slate-900/50 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:border-blue-500 border-gray-200/80 dark:border-slate-700'
       }`}
     >
-      <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200/80 dark:border-slate-700/80 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md transition-colors sticky top-0 z-10">
+      <div className="flex flex-nowrap sm:flex-wrap overflow-x-auto sm:overflow-visible items-center gap-1 p-2 border-b border-gray-200/80 dark:border-slate-700/80 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md transition-colors sticky top-0 z-10 custom-scrollbar pb-2 sm:pb-2">
         
         {/* Formato de Texto */}
         <MenuButton title="Negrita" isActive={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
@@ -115,7 +115,7 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
 
         <Divider />
 
-        {/*  Alineación */}
+        {/* Alineación */}
         <MenuButton title="Alinear a la izquierda" isActive={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
           ⫷
         </MenuButton>
@@ -127,14 +127,13 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
         </MenuButton>
       </div>
       
-      
       <div 
-        className="p-5 cursor-text h-[350px] overflow-y-auto custom-scrollbar bg-transparent transition-colors"
+        className="p-4 sm:p-5 cursor-text h-[250px] sm:h-[350px] overflow-y-auto custom-scrollbar bg-transparent transition-colors"
         onClick={() => editor.chain().focus().run()}
       >
         <EditorContent 
           editor={editor} 
-          className="prose prose-blue dark:prose-invert max-w-none focus:outline-none 
+          className="prose prose-blue dark:prose-invert max-w-none focus:outline-none text-sm sm:text-base
           prose-headings:mt-4 prose-headings:mb-2 prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0
           [&>.ProseMirror]:min-h-full [&>.ProseMirror]:outline-none" 
         />
