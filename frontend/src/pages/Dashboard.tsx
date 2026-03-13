@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNotes } from '../hooks/useNotes';
+import { noteService } from '../services/noteService';
 import NoteCard from '../components/NoteCard';
 import NoteModal from '../components/NoteModal';
 import NoteAnimation from '../components/animations/NoteAnimation';
@@ -7,6 +8,7 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardFilters from '../components/dashboard/DashboardFilters';
 import Pagination from '../components/dashboard/Pagination';
 import type { Note } from '../types/note';
+
 
 export default function Dashboard() {
   const {
@@ -18,10 +20,105 @@ export default function Dashboard() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
+  const [modalMode, setModalMode] = useState<'VIEW' | 'EDIT' | 'CREATE'>('CREATE');
 
-  const handleOpenNewNoteModal = () => { setSelectedNote(undefined); setIsModalOpen(true); };
-  const handleOpenEditNoteModal = (note: Note) => { setSelectedNote(note); setIsModalOpen(true); };
+  const handleOpenNewNoteModal = () => { setSelectedNote(undefined); setModalMode('CREATE'); setIsModalOpen(true); };
+  const handleOpenViewNoteModal = (note: Note) => { setSelectedNote(note); setModalMode('VIEW'); setIsModalOpen(true); };
+  const handleOpenEditNoteModal = (note: Note) => { setSelectedNote(note); setModalMode('EDIT'); setIsModalOpen(true); };
   const handleCloseModal = () => { setIsModalOpen(false); setSelectedNote(undefined); };
+
+  const handleDeleteNoteFromCard = async (note: Note) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.')) {
+      try {
+        await noteService.deleteNote(note.id);
+        fetchNotes();
+      } catch (err) {
+        console.error('Error al eliminar la nota:', err);
+      }
+    }
+  };
+
+  
+  const handleCopyNote = async (note: Note) => {
+    
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = note.content;
+    const plainText = tmp.textContent || tmp.innerText || '';
+
+    const textToCopy = `${note.title}\n\n${plainText}`;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      alert('¡Nota copiada al portapapeles!');
+    } catch (err) {
+      console.error('Error al copiar: ', err);
+    }
+  };
+
+
+  const handleExportPDF = (note: Note) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentWindow?.document || iframe.contentDocument;
+    if (!iframeDoc) return;
+
+    iframeDoc.open();
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${note.title}</title>
+          <style>
+            body { 
+              font-family: system-ui, -apple-system, sans-serif; 
+              padding: 40px; 
+              color: #111827; 
+            }
+            h1 { 
+              font-size: 32px; 
+              font-weight: bold; 
+              margin-bottom: 16px; 
+              border-bottom: 2px solid #e5e7eb; 
+              padding-bottom: 8px; 
+            }
+            .content { 
+              font-size: 16px; 
+              line-height: 1.6; 
+              margin-bottom: 32px; 
+            }
+            .content p { margin-bottom: 1em; }
+            .content ul, .content ol { margin-left: 20px; margin-bottom: 1em; }
+            .meta { 
+              font-size: 12px; 
+              color: #6b7280; 
+              border-top: 1px solid #e5e7eb; 
+              padding-top: 16px; 
+            }
+            /* Configuraciones nativas de impresión */
+            @media print {
+              @page { margin: 20mm; }
+              body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>${note.title}</h1>
+          <div class="content">${note.content}</div>
+          <div class="meta">
+          </div>
+        </body>
+      </html>
+    `);
+    iframeDoc.close();
+
+    iframe.contentWindow?.focus();
+    iframe.contentWindow?.print();
+
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 2000);
+  };
 
   const hasActiveFilters = searchQuery || filterFavorite || filterTag || startDate || endDate;
 
@@ -77,7 +174,16 @@ export default function Dashboard() {
           <>
             <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-200 ${loading ? 'opacity-50' : 'opacity-100'}`}>
               {notes.map((note) => (
-                <NoteCard key={note.id} note={note} onClick={() => handleOpenEditNoteModal(note)} onToggleFavorite={handleToggleFavorite} />
+                <NoteCard 
+                  key={note.id} 
+                  note={note} 
+                  onClick={() => handleOpenViewNoteModal(note)} 
+                  onEdit={() => handleOpenEditNoteModal(note)} 
+                  onToggleFavorite={handleToggleFavorite} 
+                  onDelete={handleDeleteNoteFromCard}
+                  onCopy={handleCopyNote}                      
+                  onExportPDF={handleExportPDF}               
+                />
               ))}
             </div>
             
@@ -86,7 +192,13 @@ export default function Dashboard() {
         )}
       </main>
 
-      <NoteModal isOpen={isModalOpen} onClose={handleCloseModal} noteToEdit={selectedNote} onSave={fetchNotes} />
+      <NoteModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        noteToEdit={selectedNote} 
+        onSave={fetchNotes} 
+        initialMode={modalMode} 
+      />
     </div>
   );
 }

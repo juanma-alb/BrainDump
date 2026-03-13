@@ -11,6 +11,7 @@ interface NoteModalProps {
   onClose: () => void;
   noteToEdit?: Note;
   onSave: () => void;
+  initialMode?: 'VIEW' | 'EDIT' | 'CREATE';
 }
 
 export default function NoteModal(props: NoteModalProps) {

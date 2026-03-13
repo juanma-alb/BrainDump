@@ -63,7 +63,7 @@ export default function DashboardFilters({
 
         {/* Filtro por Etiqueta*/}
         <div className="relative">
-          <button
+          {user?.role === 'USER' && (<button
             onClick={() => setIsTagMenuOpen(!isTagMenuOpen)}
             className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 border ${
               filterTag
@@ -79,7 +79,7 @@ export default function DashboardFilters({
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
-          </button>
+          </button>)}
 
           {isTagMenuOpen && (
             <>

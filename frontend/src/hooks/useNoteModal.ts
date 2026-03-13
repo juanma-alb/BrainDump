@@ -16,9 +16,10 @@ interface UseNoteModalProps {
   onClose: () => void;
   noteToEdit?: Note;
   onSave: () => void;
+  initialMode?: 'VIEW' | 'EDIT' | 'CREATE';
 }
 
-export function useNoteModal({ isOpen, onClose, noteToEdit, onSave }: UseNoteModalProps) {
+export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode }: UseNoteModalProps) {  
   const [tagInput, setTagInput] = useState("");
   const [localTags, setLocalTags] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -38,7 +39,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave }: UseNoteMod
 
   useEffect(() => {
     if (noteToEdit) {
-      setViewMode('VIEW');
+      setViewMode(initialMode || 'VIEW'); 
       setValue("title", noteToEdit.title);
       setValue("content", noteToEdit.content);
       setValue("tags", noteToEdit.tags);
@@ -48,7 +49,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave }: UseNoteMod
       reset();
       setLocalTags([]);
     }
-  }, [noteToEdit, setValue, reset, isOpen]);
+  }, [noteToEdit, setValue, reset, isOpen, initialMode]);
 
   const handleDelete = async () => {
     if (!noteToEdit) return;
