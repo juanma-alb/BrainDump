@@ -5,6 +5,7 @@ import NoteModalHeader from "./note-modal/NoteModalHeader";
 import NoteView from "./note-modal/NoteView";
 import AiAssistant from "./note-modal/AiAssistant";
 import TagEditor from "./note-modal/TagEditor";
+import ConfirmModal from "./ConfirmModal";
 
 interface NoteModalProps {
   isOpen: boolean;
@@ -20,7 +21,8 @@ export default function NoteModal(props: NoteModalProps) {
     tagInput, setTagInput, localTags,
     showAiInput, setShowAiInput, aiTopic, setAiTopic, aiError, isGenerating,
     handleDelete, handleAddTag, handleRemoveTag, handleKeyDown,
-    handleGenerateDraft, onSubmit, handleClose, handleCancel
+    handleGenerateDraft, onSubmit, handleClose, handleCancel,
+    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete
   } = useNoteModal(props);
 
   if (!props.isOpen) return null;
@@ -89,6 +91,13 @@ export default function NoteModal(props: NoteModalProps) {
         </div>
 
       </div>
+      <ConfirmModal 
+        isOpen={isConfirmDeleteOpen} 
+        onClose={() => setIsConfirmDeleteOpen(false)} 
+        onConfirm={confirmDelete} 
+        title="¿Eliminar esta nota?" 
+        message="Esta acción no se puede deshacer y la nota se perderá para siempre." 
+      />
     </div>
   );
 }

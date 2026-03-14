@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { User, AuthResponse } from '../types/auth';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   user: User | null;
@@ -34,12 +35,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     setUser(data.user);
+    toast.success(`¡Bienvenido de nuevo, ${data.user.username}!`);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    toast('Sesión cerrada. ¡Hasta pronto!');
   };
 
   return (

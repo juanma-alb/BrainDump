@@ -6,15 +6,19 @@ import AdminSearchResults from '../components/admin/AdminSearchResults';
 import NoteModal from '../components/NoteModal';
 import type { Note } from '../types/note';
 import { noteService } from '../services/noteService'; 
+import { toast } from 'sonner'; 
+import ConfirmModal from '../components/ConfirmModal'; 
 
 export default function AdminDashboard() {
   const {
     searchQuery, setSearchQuery, searchedUser, userNotes,
-    loading, error, handleSearch
+    loading, error, handleSearch, 
   } = useAdminDashboard();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null); 
+
 
   const handleOpenNoteModal = (note: Note) => {
     setSelectedNote(note);
@@ -30,14 +34,21 @@ export default function AdminDashboard() {
     handleSearch({ preventDefault: () => {} } as React.FormEvent);
   };
 
-  const handleDeleteNoteFromCard = async (note: Note) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar la nota de este usuario? Esta acción no se puede deshacer.')) {
-      try {
-        await noteService.deleteNote(note.id);
-        handleSaveNote(); // Usamos esto para refrescar los resultados de búsqueda
-      } catch (err) {
-        console.error('Error al eliminar la nota:', err);
-      }
+  const handleDeleteNoteFromCard = (note: Note) => {
+    setNoteToDelete(note);
+  };
+
+  const confirmDelete = async () => {
+    if (!noteToDelete) return;
+    try {
+      await noteService.deleteNote(noteToDelete.id);
+      toast.success('Nota del usuario eliminada');
+      handleSaveNote(); 
+    } catch (err) {
+      console.error('Error al eliminar la nota:', err);
+      toast.error('Error al eliminar la nota');
+    } finally {
+      setNoteToDelete(null);
     }
   };
 
@@ -86,6 +97,14 @@ export default function AdminDashboard() {
         onClose={handleCloseModal}
         noteToEdit={selectedNote}
         onSave={handleSaveNote}
+      />
+
+      <ConfirmModal 
+        isOpen={!!noteToDelete} 
+        onClose={() => setNoteToDelete(null)} 
+        onConfirm={confirmDelete} 
+        title="¿Eliminar nota de usuario?" 
+        message="Esta acción no se puede deshacer. Se eliminará permanentemente de la base de datos." 
       />
     </div>
   );

@@ -55,7 +55,6 @@ export default function NoteCard({ note, onClick, onToggleFavorite, onDelete, on
             {/* Panel Flotante del Menú */}
             <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-100 dark:border-slate-700/50 rounded-2xl shadow-xl z-40 py-2 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
               
-              {/* ✅ SOLO MOSTRAMOS ESTO SI NO ES ADMIN */}
               {user?.role !== 'ADMIN' && (
                 <>
                   <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onEdit?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium">
@@ -71,7 +70,6 @@ export default function NoteCard({ note, onClick, onToggleFavorite, onDelete, on
                 </>
               )}
               
-              {/* ✅ ELIMINAR SIEMPRE VISIBLE */}
               <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onDelete?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3 font-semibold">
                 🗑️ Eliminar
               </button>

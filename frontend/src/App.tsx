@@ -8,13 +8,24 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
+import NotFound from "./pages/NotFound"; 
 import { ThemeProvider } from "./context/ThemeContext";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          <Toaster 
+            position="top-center" 
+            richColors 
+            expand={false}
+            toastOptions={{
+              className: 'rounded-full backdrop-blur-xl border border-white/20 shadow-2xl mx-auto !w-fit max-w-[calc(100vw-2rem)] px-5 !-translate-x-3.5',
+            }}
+          />
+
           <Routes>
             <Route element={<AuthLayout />}>
               <Route path="/" element={<Login />} />
@@ -23,8 +34,11 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               
               <Route path="/login" element={<Navigate to="/" replace />} />
+              
+              <Route path="*" element={<NotFound />} />
             </Route>
 
+            {/* Rutas Privadas */}
             <Route
               path="/dashboard"
               element={

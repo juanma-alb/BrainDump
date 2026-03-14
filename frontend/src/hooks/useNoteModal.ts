@@ -4,6 +4,7 @@ import type { Note } from "../types/note";
 import { createNoteSchema, updateNoteSchema } from "../schemas/noteSchemas";
 import type { CreateNoteFormValues, UpdateNoteFormValues } from "../schemas/noteSchemas";
 import { noteService } from "../services/noteService";
+import { toast } from "sonner";
 
 export type UnifiedFormValues = {
   title: string;
@@ -27,6 +28,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
   const [aiTopic, setAiTopic] = useState("");
   const [aiError, setAiError] = useState("");
   const [viewMode, setViewMode] = useState<'VIEW' | 'EDIT' | 'CREATE'>('CREATE');
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false); 
 
   const isEditing = Boolean(noteToEdit);
   const schema = isEditing ? updateNoteSchema : createNoteSchema;
@@ -51,16 +53,20 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
     }
   }, [noteToEdit, setValue, reset, isOpen, initialMode]);
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => setIsConfirmDeleteOpen(true);
+
+  const confirmDelete = async () => {
     if (!noteToEdit) return;
-    if (window.confirm('¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.')) {
-      try {
-        await noteService.deleteNote(noteToEdit.id);
-        onSave(); 
-        onClose(); 
-      } catch (error) {
-        console.error('Error al eliminar la nota:', error);
-      }
+    try {
+      await noteService.deleteNote(noteToEdit.id);
+      toast.success('Nota eliminada correctamente'); 
+      onSave(); 
+      onClose(); 
+    } catch (error) {
+      console.error('Error al eliminar la nota:', error);
+      toast.error('Ocurrió un error al eliminar la nota'); 
+    } finally {
+      setIsConfirmDeleteOpen(false);
     }
   };
 
@@ -124,8 +130,10 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
 
       if (isEditing && noteToEdit) {
         await noteService.updateNote(noteToEdit.id, validation.data as UpdateNoteFormValues);
+        toast.success('Nota actualizada con éxito'); 
       } else {
         await noteService.createNote(validation.data as CreateNoteFormValues);
+        toast.success('Nota creada maravillosamente'); 
       }
 
       onSave();
@@ -165,7 +173,8 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
     viewMode, setViewMode, form,
     tagInput, setTagInput, localTags,
     showAiInput, setShowAiInput, aiTopic, setAiTopic, aiError, isGenerating,
-    handleDelete, handleAddTag, handleRemoveTag, handleKeyDown,
-    handleGenerateDraft, onSubmit, handleClose, handleCancel
+    handleDelete: handleDeleteClick, handleAddTag, handleRemoveTag, handleKeyDown, 
+    handleGenerateDraft, onSubmit, handleClose, handleCancel,
+    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete 
   };
 }

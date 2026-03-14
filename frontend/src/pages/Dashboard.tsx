@@ -8,6 +8,8 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardFilters from '../components/dashboard/DashboardFilters';
 import Pagination from '../components/dashboard/Pagination';
 import type { Note } from '../types/note';
+import { toast } from 'sonner'; 
+import ConfirmModal from '../components/ConfirmModal'; 
 
 export default function Dashboard() {
   const {
@@ -20,20 +22,26 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
   const [modalMode, setModalMode] = useState<'VIEW' | 'EDIT' | 'CREATE'>('CREATE');
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null); 
 
   const handleOpenNewNoteModal = () => { setSelectedNote(undefined); setModalMode('CREATE'); setIsModalOpen(true); };
   const handleOpenViewNoteModal = (note: Note) => { setSelectedNote(note); setModalMode('VIEW'); setIsModalOpen(true); };
   const handleOpenEditNoteModal = (note: Note) => { setSelectedNote(note); setModalMode('EDIT'); setIsModalOpen(true); };
   const handleCloseModal = () => { setIsModalOpen(false); setSelectedNote(undefined); };
 
-  const handleDeleteNoteFromCard = async (note: Note) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.')) {
-      try {
-        await noteService.deleteNote(note.id);
-        fetchNotes();
-      } catch (err) {
-        console.error('Error al eliminar la nota:', err);
-      }
+  const handleDeleteNoteFromCard = (note: Note) => setNoteToDelete(note);
+
+  const confirmDelete = async () => {
+    if (!noteToDelete) return;
+    try {
+      await noteService.deleteNote(noteToDelete.id);
+      toast.success('Nota eliminada correctamente'); 
+      fetchNotes();
+    } catch (err) {
+      console.error('Error al eliminar la nota:', err);
+      toast.error('Error al eliminar la nota'); 
+    } finally {
+      setNoteToDelete(null);
     }
   };
 
@@ -45,9 +53,9 @@ export default function Dashboard() {
     const textToCopy = `${note.title}\n\n${plainText}`;
     try {
       await navigator.clipboard.writeText(textToCopy);
-      alert('¡Nota copiada al portapapeles!');
+      toast.success('¡Nota copiada al portapapeles!');
     } catch (err) {
-      console.error('Error al copiar: ', err);
+      toast.error('Error al copiar el texto'); 
     }
   };
 
@@ -171,6 +179,15 @@ export default function Dashboard() {
         onSave={fetchNotes} 
         initialMode={modalMode} 
       />
+
+      <ConfirmModal 
+        isOpen={!!noteToDelete} 
+        onClose={() => setNoteToDelete(null)} 
+        onConfirm={confirmDelete} 
+        title="¿Eliminar esta nota?" 
+        message="Esta acción no se puede deshacer y la nota se perderá para siempre." 
+      />
+      
     </div>
   );
 }

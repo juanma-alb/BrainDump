@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { noteService } from '../services/noteService';
 import type { Note } from '../types/note';
+import { toast } from "sonner";
 
 export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -98,7 +99,15 @@ export function useNotes() {
         isFavorite: updatedStatus 
       });
       fetchNotes(); 
+      
+      if (updatedStatus) {
+        toast.success('Nota agregada a favoritos'); 
+      } else {
+        toast('Nota quitada de favoritos'); 
+      }
+      
     } catch (error) {
+      toast.error('Ocurrió un error al actualizar favoritos'); 
       console.error('Error al actualizar favorito:', error);
       setNotes(currentNotes => 
         currentNotes.map(n => n.id === noteToToggle.id ? { ...n, isFavorite: !updatedStatus } : n)
