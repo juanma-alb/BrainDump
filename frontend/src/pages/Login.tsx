@@ -56,6 +56,13 @@ function Login() {
               ideas, notas y versos.
             </span>
           </p>
+
+          <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 animate-in fade-in duration-1000 delay-500">
+            <p className="text-xs md:text-sm text-gray-400 dark:text-gray-500 font-light tracking-wide cursor-default transition-colors duration-300 hover:text-gray-600 dark:hover:text-gray-300">
+              Creado por <span className="font-medium">Juan Manuel Albino</span>
+            </p>
+          </div>
+
         </div>
       ) : (
         <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-white/50 dark:border-slate-700/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-[2.5rem] p-8 md:p-10 animate-in slide-in-from-bottom-8 fade-in duration-500">

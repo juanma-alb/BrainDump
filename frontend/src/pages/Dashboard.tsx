@@ -4,6 +4,7 @@ import { noteService } from '../services/noteService';
 import NoteCard from '../components/NoteCard';
 import NoteModal from '../components/NoteModal';
 import NoteAnimation from '../components/animations/NoteAnimation';
+import Lens from '../components/animations/Lens';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardFilters from '../components/dashboard/DashboardFilters';
 import Pagination from '../components/dashboard/Pagination';
@@ -134,7 +135,9 @@ export default function Dashboard() {
             <div className="text-center px-4">
               {hasActiveFilters ? (
                 <>
-                  <div className="text-5xl md:text-6xl mb-4 opacity-50">🔍</div>
+                  <div className="opacity-60 mb-2 flex justify-center">
+                    <Lens />
+                  </div>
                   <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">No se encontraron resultados</h2>
                   <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 transition-colors">Intenta ajustar tus filtros de búsqueda</p>
                 </>

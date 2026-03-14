@@ -8,6 +8,7 @@ import type { Note } from '../types/note';
 import { noteService } from '../services/noteService'; 
 import { toast } from 'sonner'; 
 import ConfirmModal from '../components/ConfirmModal'; 
+import SearchAnimation from '../components/animations/SearchUser';
 
 export default function AdminDashboard() {
   const {
@@ -74,14 +75,14 @@ export default function AdminDashboard() {
           />
         )}
 
-        {/* Estado Inicial */}
+       {/* Estado Inicial */}
         {!searchedUser && !loading && !error && (
-          <div className="text-center py-10 md:py-20 px-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-24 md:h-24 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-4 md:mb-6 transition-colors">
-              <svg className="w-8 h-8 md:w-12 md:h-12 text-purple-600 dark:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+          <div className="text-center pt-2 md:pt-4 pb-10 md:pb-20 px-4">
+            
+            <div className="flex justify-center opacity-80 mb-2 md:mb-4">
+              <SearchAnimation />
             </div>
+
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
               Busca un usuario
             </h2>

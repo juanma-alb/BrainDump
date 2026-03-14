@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotFoundAnimation from '../components/animations/404';
+
 
 export default function NotFound() {
   const { user } = useAuth();
@@ -9,9 +11,8 @@ export default function NotFound() {
       
       <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-white/50 dark:border-slate-700/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-[2.5rem] p-8 md:p-12 w-full">
         
-        {/* Gráfico / Emoji 404 */}
-        <div className="text-7xl md:text-9xl mb-4 md:mb-6 animate-bounce">
-          🛸
+        <div className="flex justify-center mb-6 md:mb-8">
+          <NotFoundAnimation />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">
@@ -23,10 +24,9 @@ export default function NotFound() {
         </h2>
         
         <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-8 px-2 md:px-4">
-          La nota o página que estás buscando no existe, fue eliminada o ha sido abducida por extraterrestres.
+          La nota o página que estás buscando no existe o fue eliminada.
         </p>
 
-        {/* ✅ BOTÓN INTELIGENTE SEGÚN SESIÓN */}
         {user ? (
           <Link 
             to="/dashboard" 

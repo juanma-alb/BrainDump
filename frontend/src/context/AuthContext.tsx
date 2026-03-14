@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     setUser(data.user);
-    toast.success(`¡Bienvenido de nuevo, ${data.user.username}!`);
+    toast(`¡Bienvenido de nuevo, ${data.user.username}!`);
   };
 
   const logout = () => {

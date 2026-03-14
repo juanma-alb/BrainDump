@@ -22,7 +22,7 @@ function App() {
             richColors 
             expand={false}
             toastOptions={{
-              className: 'rounded-full backdrop-blur-xl border border-white/20 shadow-2xl mx-auto !w-fit max-w-[calc(100vw-2rem)] px-5 !-translate-x-3.5',
+              className: 'rounded-full backdrop-blur-xl border border-white/20 shadow-2xl mx-auto !w-fit max-w-[calc(100vw-2rem)] px-5 !-translate-x-3.5 md:!translate-x-18',
             }}
           />
 

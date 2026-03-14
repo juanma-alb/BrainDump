@@ -53,25 +53,40 @@ export default function NoteCard({ note, onClick, onToggleFavorite, onDelete, on
             <div className="fixed inset-0 z-30" onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }}></div>
             
             {/* Panel Flotante del Menú */}
-            <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-100 dark:border-slate-700/50 rounded-2xl shadow-xl z-40 py-2 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="absolute right-0 mt-2 w-52 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-100 dark:border-slate-700/50 rounded-2xl shadow-xl z-40 py-2 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
               
               {user?.role !== 'ADMIN' && (
                 <>
-                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onEdit?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium">
-                    ✏️ Editar
+                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onEdit?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium group">
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Editar
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onCopy?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium">
-                    📋 Copiar texto
+                  
+                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onCopy?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium group">
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copiar texto
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onExportPDF?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium">
-                    📄 Exportar PDF / Imprimir
+                  
+                  <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onExportPDF?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3 font-medium group">
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-purple-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Exportar PDF
                   </button>
+                  
                   <div className="h-px bg-gray-100 dark:bg-slate-700/50 my-1"></div>
                 </>
               )}
               
-              <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onDelete?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3 font-semibold">
-                🗑️ Eliminar
+              <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); onDelete?.(note); }} className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3 font-semibold group">
+                <svg className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Eliminar
               </button>
             </div>
           </>

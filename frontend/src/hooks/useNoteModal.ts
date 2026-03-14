@@ -133,7 +133,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
         toast.success('Nota actualizada con éxito'); 
       } else {
         await noteService.createNote(validation.data as CreateNoteFormValues);
-        toast.success('Nota creada maravillosamente'); 
+        toast.success('Nota creada con éxito'); 
       }
 
       onSave();
