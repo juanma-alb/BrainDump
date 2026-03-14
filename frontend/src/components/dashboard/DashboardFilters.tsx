@@ -37,7 +37,7 @@ export default function DashboardFilters({
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Buscar notas por contenido o título..."
+          placeholder="Busca tus notas por contenido o título..."
           className="w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 text-sm md:text-base bg-white/80 dark:bg-slate-800/80 dark:text-white backdrop-blur-md border border-gray-200/50 dark:border-slate-700 rounded-xl md:rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 placeholder-gray-400"
         />
       </div>

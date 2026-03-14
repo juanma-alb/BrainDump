@@ -1,4 +1,5 @@
 import type { Note } from "../../types/note";
+import { useAuth } from "../../context/AuthContext";
 
 interface NoteViewProps {
   note: Note;
@@ -8,6 +9,8 @@ interface NoteViewProps {
 }
 
 export default function NoteView({ note, onDelete, onClose, onEdit }: NoteViewProps) {
+  const { user } = useAuth(); 
+  
   return (
     <div className="px-5 py-5 sm:px-8 sm:py-6 space-y-6 sm:space-y-8 animate-in fade-in duration-300 flex flex-col min-h-full">
       <div>
@@ -45,12 +48,14 @@ export default function NoteView({ note, onDelete, onClose, onEdit }: NoteViewPr
           >
             Cerrar
           </button>
+          {user?.role !== 'ADMIN' && (
           <button
             onClick={onEdit}
             className="w-full sm:w-auto px-6 py-3 sm:py-2.5 rounded-xl sm:rounded-full bg-blue-500 text-white font-semibold shadow-[0_4px_12px_rgb(59,130,246,0.3)] hover:bg-blue-600 transition-all duration-200 text-center"
           >
             Editar Nota
           </button>
+          )}
         </div>
       </div>
     </div>

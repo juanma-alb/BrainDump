@@ -5,6 +5,7 @@ import AdminSearchBar from '../components/admin/AdminSearchBar';
 import AdminSearchResults from '../components/admin/AdminSearchResults';
 import NoteModal from '../components/NoteModal';
 import type { Note } from '../types/note';
+import { noteService } from '../services/noteService'; 
 
 export default function AdminDashboard() {
   const {
@@ -29,6 +30,17 @@ export default function AdminDashboard() {
     handleSearch({ preventDefault: () => {} } as React.FormEvent);
   };
 
+  const handleDeleteNoteFromCard = async (note: Note) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar la nota de este usuario? Esta acción no se puede deshacer.')) {
+      try {
+        await noteService.deleteNote(note.id);
+        handleSaveNote(); // Usamos esto para refrescar los resultados de búsqueda
+      } catch (err) {
+        console.error('Error al eliminar la nota:', err);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       <AdminHeader />
@@ -47,6 +59,7 @@ export default function AdminDashboard() {
             searchedUser={searchedUser} 
             userNotes={userNotes} 
             onNoteClick={handleOpenNoteModal} 
+            onDeleteNote={handleDeleteNoteFromCard}
           />
         )}
 

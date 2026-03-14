@@ -6,9 +6,10 @@ interface AdminSearchResultsProps {
   searchedUser: User;
   userNotes: Note[];
   onNoteClick: (note: Note) => void;
+  onDeleteNote: (note: Note) => void;
 }
 
-export default function AdminSearchResults({ searchedUser, userNotes, onNoteClick }: AdminSearchResultsProps) {
+export default function AdminSearchResults({ searchedUser, userNotes, onNoteClick, onDeleteNote }: AdminSearchResultsProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-ES', {
@@ -80,6 +81,7 @@ export default function AdminSearchResults({ searchedUser, userNotes, onNoteClic
                 key={note.id} 
                 note={note} 
                 onClick={() => onNoteClick(note)} 
+                onDelete={onDeleteNote}
               />
             ))}
           </div>
