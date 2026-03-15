@@ -14,7 +14,7 @@ export class MongoDbNoteRepository implements INoteRepository {
         tags: note.tags,
         isFavorite: note.isFavorite,
       },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
   }
 

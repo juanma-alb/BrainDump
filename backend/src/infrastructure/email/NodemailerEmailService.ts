@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import type { IEmailService } from '@domain/ports/IEmailService';
 import { logger } from '@infrastructure/logger/PinoLogger';
 
-// 1. Forzamos la carga de variables de entorno explícitamente aquí
 dotenv.config();
 
 export class NodemailerEmailService implements IEmailService {
@@ -12,8 +11,7 @@ export class NodemailerEmailService implements IEmailService {
   constructor() {
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
 
-    // 2. CHIVATO (Debug): Esto nos dirá exactamente qué está leyendo Node
-    console.log(`\n📧 [Email Service] Iniciando conexión SMTP...`);
+    console.log(`\n [Email Service] Iniciando conexión SMTP...`);
     console.log(`   Host: ${SMTP_HOST}`);
     console.log(`   User: ${SMTP_USER}`);
 
@@ -24,17 +22,18 @@ export class NodemailerEmailService implements IEmailService {
     this.transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: Number(SMTP_PORT),
-      secure: false, // Debe ser false para el puerto 587
+      secure: false, 
       auth: {
         user: SMTP_USER,
         pass: SMTP_PASS,
       },
-      // 3. OPTIMIZACIÓN OUTLOOK: A veces Microsoft rechaza conexiones si no se fuerza el protocolo TLS
+      family: 4, 
+      
       tls: {
         ciphers: 'SSLv3',
-        rejectUnauthorized: false // Útil en desarrollo para evitar errores de certificados locales
+        rejectUnauthorized: false 
       }
-    });
+    }as any);
   }
 
   async sendPasswordResetEmail(to: string, resetToken: string, userId: string): Promise<void> {

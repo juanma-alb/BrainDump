@@ -20,6 +20,7 @@ export class Server {
     private readonly adminController: AdminController
   ) {
     this.app = express();
+    this.app.set('trust proxy', 1);
     this.configureMiddleware();
     this.configureRoutes();
   }

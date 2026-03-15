@@ -13,7 +13,7 @@ export class MongoDbUserRepository implements IUserRepository {
         passwordHash: user.passwordHash,
         role: user.role,
       },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
   }
 
