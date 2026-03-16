@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registerSchema, type RegisterFormValues } from '../schemas/authSchemas';
 import { authService } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'sonner';
+
 
 function Register() {
   const navigate = useNavigate();
@@ -22,9 +24,10 @@ function Register() {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       setError('');
-      const response = await authService.register(data);
-      login(response);
-      navigate('/dashboard');
+      await authService.register(data);
+      toast.success('¡Registro exitoso! Por favor, inicia sesión.');
+      navigate('/');
+      
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error al registrarse. Intenta nuevamente.');
     }
@@ -32,8 +35,8 @@ function Register() {
 
   return (
     <div className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-white/50 dark:border-slate-700/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-[2.5rem] p-8 md:p-10 animate-in slide-in-from-bottom-8 fade-in duration-500">
-      
-      <button 
+
+      <button
         onClick={() => navigate('/')}
         className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
         aria-label="Volver al Login"
@@ -45,7 +48,7 @@ function Register() {
 
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full mb-4">
-            <svg className="w-8 h-8 text-grey-400 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-8 h-8 text-grey-400 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
           </svg>
         </div>

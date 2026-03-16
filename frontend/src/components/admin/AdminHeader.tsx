@@ -22,7 +22,7 @@ export default function AdminHeader() {
               Panel de Administración
             </h1>
             <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5 transition-colors">
-              Bienvenido · {user?.username} 
+              Hola · {user?.username} 
             </p>
           </div>
 
