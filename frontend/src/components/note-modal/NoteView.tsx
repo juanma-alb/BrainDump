@@ -1,5 +1,6 @@
 import type { Note } from "../../types/note";
 import { useAuth } from "../../context/AuthContext";
+import DOMPurify from 'dompurify';
 
 interface NoteViewProps {
   note: Note;
@@ -17,7 +18,7 @@ export default function NoteView({ note, onDelete, onClose, onEdit }: NoteViewPr
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 transition-colors">{note.title}</h1>
         <div 
           className="prose prose-blue dark:prose-invert max-w-none text-gray-800 dark:text-gray-300 transition-colors"
-          dangerouslySetInnerHTML={{ __html: note.content }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.content) }}
         />
       </div>
 

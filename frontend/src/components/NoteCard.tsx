@@ -24,9 +24,8 @@ export default function NoteCard({ note, onClick, onToggleFavorite, onDelete, on
   };
 
   const stripHtml = (html: string) => {
-    const tmp = document.createElement('DIV');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || doc.body.innerText || '';
   };
 
   return (
