@@ -51,7 +51,7 @@ export default function NoteCard({ note, onClick, onToggleFavorite, onDelete, on
           <>
             <div className="fixed inset-0 z-30" onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }}></div>
             
-            {/* Panel Flotante del Menú */}
+            {/* floating menu panel */}
             <div className="absolute right-0 mt-2 w-52 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-100 dark:border-slate-700/50 rounded-2xl shadow-xl z-40 py-2 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
               
               {user?.role !== 'ADMIN' && (

@@ -9,11 +9,12 @@ export interface ResetPasswordInput {
   newPassword: string;
 }
 
-/**
- * Caso de Uso: Restablecer la contraseña de un usuario.
- * El token de reset está firmado con el hash actual de la contraseña,
- * por lo que queda invalidado automáticamente tras el cambio.
+/*
+  Use Case: Reset a user's password.
+  The reset token is signed with the current password hash,
+  so it is automatically invalidated after the password is changed.
  */
+
 export class ResetPasswordUseCase {
   constructor(
     private readonly userRepository: IUserRepository,

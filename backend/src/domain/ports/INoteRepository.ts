@@ -18,11 +18,8 @@ export interface PaginatedResult<T> {
   limit: number;
   totalPages: number;
 }
-
-/**
- * Puerto (contrato) que define cómo la aplicación persiste y recupera notas.
- * La capa de Infrastructure DEBE implementar esta interfaz.
- * La regla de dependencia se respeta: el dominio no conoce la implementación concreta.
+/*
+  Port (contract) that defines how the application persists and retrieves notes.
  */
 export interface INoteRepository {
   save(note: Note): Promise<void>;

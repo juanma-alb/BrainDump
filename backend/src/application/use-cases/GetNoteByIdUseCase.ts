@@ -5,9 +5,9 @@ export interface GetNoteByIdInput {
   id: string;
 }
 
-/**
- * Caso de Uso: Obtener una nota por su ID.
- * Lanza un error de dominio si la nota no existe, en lugar de devolver null.
+/*
+  Use Case: Retrieve a note by its ID.
+  Throws a domain error if the note does not exist, instead of returning null.
  */
 export class GetNoteByIdUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}

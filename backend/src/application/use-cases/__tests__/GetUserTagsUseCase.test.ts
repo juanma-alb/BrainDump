@@ -11,7 +11,7 @@ describe('GetUserTagsUseCase', () => {
     getUserTagsUseCase = new GetUserTagsUseCase(mockNoteRepository);
   });
 
-  it('debe retornar un array de etiquetas exitosamente', async () => {
+  it('should successfully return an array of tags', async () => {
     const mockTags = ['ideas', 'react', 'work'];
     vi.mocked(mockNoteRepository.getUserTags).mockResolvedValue(mockTags);
 
@@ -23,7 +23,7 @@ describe('GetUserTagsUseCase', () => {
     expect(result).toEqual(mockTags);
   });
 
-  it('debe lanzar un error si el userId está vacío o es indefinido', async () => {
+  it('should throw an error if the userId is empty or undefined', async () => {
     await expect(getUserTagsUseCase.execute('')).rejects.toThrowError(
       'El ID de usuario es requerido.'
     );

@@ -11,7 +11,7 @@ export function useNotes() {
   const [error, setError] = useState<string | null>(null);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
-  // Estados de Búsqueda y Filtros
+  // search states and filters
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterFavorite, setFilterFavorite] = useState(false);

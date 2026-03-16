@@ -51,7 +51,7 @@ function Login() {
             Iniciar sesión
           </button>
           <p className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200 leading-tight tracking-tight transition-colors">
-            El mejor lugar para tus <br />
+            El mejor lugar para volcar tus <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">
               ideas, notas y versos.
             </span>

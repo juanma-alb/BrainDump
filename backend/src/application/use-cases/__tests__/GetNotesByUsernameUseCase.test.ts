@@ -15,14 +15,14 @@ describe('GetNotesByUsernameUseCase', () => {
     useCase = new GetNotesByUsernameUseCase(mockUserRepository, mockNoteRepository);
   });
 
-  it('obtiene las notas del usuario si este existe', async () => {
+  it('gets the user notes if the user exists', async () => {
     const fakeUser = { id: 'user-456', username: 'author' };
     const fakeNotes = [
       Note.create({ 
         id: 'n1', 
         userId: 'user-456', 
-        title: 'Nota de Admin', 
-        content: 'Contenido', 
+        title: 'Admin Note', 
+        content: 'Content', 
         tags: [], 
         createdAt: new Date(), 
         updatedAt: new Date() 
@@ -37,10 +37,10 @@ describe('GetNotesByUsernameUseCase', () => {
     expect(mockUserRepository.findByUsername).toHaveBeenCalledWith('author');
     expect(mockNoteRepository.findByUserId).toHaveBeenCalledWith('user-456');
     expect(result).toHaveLength(1);
-    expect(result[0]?.title).toBe('Nota de Admin');
+    expect(result[0]?.title).toBe('Admin Note');
   });
 
-  it('lanza un error si el usuario no existe y no busca sus notas', async () => {
+  it('throws an error if the user does not exist and does not fetch their notes', async () => {
     vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(null);
 
     await expect(useCase.execute({ username: 'nobody' }))

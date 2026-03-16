@@ -13,6 +13,8 @@ interface GetNotesInput {
   endDate?: Date;
 }
 
+/* Use case: Retrieve a user's ratings starting from page 1, with a limit of 10 ratings per page (pagination) */
+
 export class GetNotesUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}
 

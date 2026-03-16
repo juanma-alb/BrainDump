@@ -1,9 +1,7 @@
 import type { User } from '@domain/entities/User';
 
-/**
- * Puerto (contrato) que define cómo la aplicación persiste y recupera usuarios.
- * La capa de Infrastructure DEBE implementar esta interfaz.
- * La regla de dependencia se respeta: el dominio no conoce la implementación concreta.
+/*
+  Port (contract) that defines how the application persists and retrieves users.
  */
 export interface IUserRepository {
   save(user: User): Promise<void>;

@@ -15,9 +15,9 @@ export interface CreateNoteOutput {
   createdAt: Date;
 }
 
-/**
- * Caso de Uso: Crear una nueva nota.
- * Recibe el repositorio por inyección de dependencias → testeable sin base de datos real.
+/*
+  Use Case: Create a new note.
+  Receives the repository via dependency injection → testable without a real database.
  */
 export class CreateNoteUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}

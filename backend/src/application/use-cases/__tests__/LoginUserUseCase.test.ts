@@ -30,7 +30,7 @@ describe('LoginUserUseCase', () => {
     useCase = new LoginUserUseCase(mockUserRepository, mockTokenService);
   });
 
-  it('devuelve un token y el usuario cuando las credenciales son correctas', async () => {
+  it('returns a token and the user when the credentials are correct', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(FAKE_USER as any);
     vi.mocked(bcrypt.compare).mockResolvedValue(true as never);
     vi.mocked(mockTokenService.generateToken).mockReturnValue('jwt.token.simulado');
@@ -48,7 +48,7 @@ describe('LoginUserUseCase', () => {
     });
   });
 
-  it('lanza error si el email no existe', async () => {
+  it('throws an error if the email does not exist', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
 
     await expect(
@@ -58,7 +58,7 @@ describe('LoginUserUseCase', () => {
     expect(mockTokenService.generateToken).not.toHaveBeenCalled();
   });
 
-  it('lanza error si el password es incorrecto', async () => {
+  it('throws an error if the password is incorrect', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(FAKE_USER as any);
     vi.mocked(bcrypt.compare).mockResolvedValue(false as never);
 

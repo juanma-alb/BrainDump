@@ -9,8 +9,8 @@ const ATTACKER_ID = 'user-attacker-456';
 const existingNote = Note.create({
   id: 'note-to-delete',
   userId: OWNER_ID,
-  title: 'Nota temporal',
-  content: 'Esta nota será eliminada.',
+  title: 'Temporary note',
+  content: 'This note will be deleted.',
   tags: [],
   createdAt: new Date('2026-01-01'),
   updatedAt: new Date('2026-01-01'),
@@ -26,7 +26,7 @@ describe('DeleteNoteUseCase', () => {
     useCase = new DeleteNoteUseCase(mockNoteRepository);
   });
 
-  it('elimina la nota cuando el userId coincide con el propietario', async () => {
+  it('deletes the note when the userId matches the owner', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     await useCase.execute({ noteId: 'note-to-delete', userId: OWNER_ID, role: 'USER' });
@@ -35,7 +35,7 @@ describe('DeleteNoteUseCase', () => {
     expect(mockNoteRepository.delete).toHaveBeenCalledWith('note-to-delete');
   });
 
-  it('lanza error de autorización si el userId no coincide (IDOR)', async () => {
+  it('throws an authorization error if the userId does not match (IDOR)', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     await expect(
@@ -45,7 +45,7 @@ describe('DeleteNoteUseCase', () => {
     expect(mockNoteRepository.delete).not.toHaveBeenCalled();
   });
 
-  it('permite eliminar la nota si el rol es ADMIN, incluso si no es el propietario', async () => {
+  it('allows deleting the note if the role is ADMIN, even if they are not the owner', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     await useCase.execute({ noteId: 'note-to-delete', userId: 'admin-999', role: 'ADMIN' });
@@ -53,7 +53,7 @@ describe('DeleteNoteUseCase', () => {
     expect(mockNoteRepository.delete).toHaveBeenCalledWith('note-to-delete');
   });
 
-  it('lanza error si la nota no existe', async () => {
+  it('throws an error if the note does not exist', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(null);
 
     await expect(

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Home() {
   const { user } = useAuth();
 
-  // Redirección 
+  // redirect 
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }

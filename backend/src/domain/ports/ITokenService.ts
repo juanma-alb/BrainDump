@@ -3,9 +3,8 @@ export interface TokenPayload {
   role: string;
 }
 
-/**
- * Puerto que define el contrato para la generación de tokens de autenticación.
- * La capa de Infrastructure DEBE implementar esta interfaz.
+/*
+  Port that defines the contract for generating authentication tokens.
  */
 export interface ITokenService {
   generateToken(payload: TokenPayload): string;

@@ -12,7 +12,7 @@ describe('GetNotesUseCase', () => {
     useCase = new GetNotesUseCase(mockNoteRepository);
   });
 
-  it('pasa los filtros correctos y valores de paginación por defecto para un usuario normal', async () => {
+  it('passes the correct filters and default pagination values for a regular user', async () => {
     const mockResult = { items: [], total: 0, page: 1, limit: 10, totalPages: 0 };
     vi.mocked(mockNoteRepository.findMany).mockResolvedValue(mockResult);
 
@@ -34,7 +34,7 @@ describe('GetNotesUseCase', () => {
     expect(result).toEqual(mockResult);
   });
 
-  it('no filtra por userId si el solicitante tiene rol de ADMIN', async () => {
+  it('does not filter by userId if the requester has ADMIN role', async () => {
     vi.mocked(mockNoteRepository.findMany).mockResolvedValue({ items: [], total: 0, page: 1, limit: 10, totalPages: 0 });
 
     await useCase.execute({
@@ -47,7 +47,7 @@ describe('GetNotesUseCase', () => {
     );
   });
 
-  it('pasa todos los filtros avanzados (search, isFavorite, fechas, tags) al repositorio', async () => {
+  it('passes all advanced filters (search, isFavorite, dates, tags) to the repository', async () => {
     vi.mocked(mockNoteRepository.findMany).mockResolvedValue({ items: [], total: 0, page: 2, limit: 5, totalPages: 0 });
 
     const testDate = new Date('2026-03-10');
@@ -59,7 +59,7 @@ describe('GetNotesUseCase', () => {
       limit: 5,
       tag: 'idea',
       isFavorite: true,
-      search: 'proyecto',
+      search: 'project',
       startDate: testDate,
       endDate: testDate,
     });
@@ -70,7 +70,7 @@ describe('GetNotesUseCase', () => {
       userId: 'user-123',
       tag: 'idea',
       isFavorite: true,
-      search: 'proyecto',
+      search: 'project',
       startDate: testDate,
       endDate: testDate,
     });

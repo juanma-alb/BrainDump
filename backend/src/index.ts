@@ -32,14 +32,14 @@ async function main() {
   await mongoose.connect(mongoUri);
   logger.info('Conexion a MongoDB establecida correctamente.');
 
-  // Infraestructura
+  // Infrastructure
   const noteRepository = new MongoDbNoteRepository();
   const userRepository = new MongoDbUserRepository();
   const aiService = new GeminiAiService();
   const tokenService = new JwtTokenService();
   const emailService = new BrevoEmailService();
 
-  // Casos de uso
+  // Use Cases
   const createNote = new CreateNoteUseCase(noteRepository);
   const getNotes = new GetNotesUseCase(noteRepository);
   const updateNote = new UpdateNoteUseCase(noteRepository);

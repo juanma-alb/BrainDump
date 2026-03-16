@@ -16,7 +16,7 @@ describe('ForgotPasswordUseCase', () => {
     useCase = new ForgotPasswordUseCase(mockUserRepository, mockTokenService, mockEmailService);
   });
 
-  it('genera un token y envía un correo si el usuario existe', async () => {
+  it('generates a token and sends an email if the user exists', async () => {
     const user = {
       id: 'user-123',
       email: 'test@example.com',
@@ -38,7 +38,7 @@ describe('ForgotPasswordUseCase', () => {
     );
   });
 
-  it('no hace nada (retorna silenciosamente) si el usuario no existe', async () => {
+  it('does nothing (returns silently) if the user does not exist', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
 
     await useCase.execute({ email: 'inexistente@example.com' });

@@ -3,12 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* transición para fondo */
+/* transition to background */
 body {
   @apply transition-colors duration-300 bg-slate-50 dark:bg-slate-900;
 }
 
-/* scrollbar elegante para el modal de notas*/
+/* stylish scrollbar for the notes modal*/
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }

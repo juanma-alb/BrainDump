@@ -30,7 +30,7 @@ describe('ResetPasswordUseCase', () => {
     useCase = new ResetPasswordUseCase(mockUserRepository, mockTokenService);
   });
 
-  it('restablece la contraseña si el token es válido y el usuario existe', async () => {
+  it('resets the password if the token is valid and the user exists', async () => {
     vi.mocked(mockUserRepository.findById).mockResolvedValue(FAKE_USER as any);
     vi.mocked(mockTokenService.verifyPasswordResetToken).mockReturnValue({ userId: 'user-123' });
 
@@ -48,7 +48,7 @@ describe('ResetPasswordUseCase', () => {
     expect(savedUser?.passwordHash).toBe('new_hashed_password');
   });
 
-  it('lanza un error si el usuario no existe', async () => {
+  it('throws an error if the user does not exist', async () => {
     vi.mocked(mockUserRepository.findById).mockResolvedValue(null);
 
     await expect(
@@ -63,7 +63,7 @@ describe('ResetPasswordUseCase', () => {
     expect(mockUserRepository.save).not.toHaveBeenCalled();
   });
 
-  it('lanza un error si el token es inválido (dejando que el TokenService arroje el error)', async () => {
+  it('throws an error if the token is invalid (letting the TokenService throw the error)', async () => {
     vi.mocked(mockUserRepository.findById).mockResolvedValue(FAKE_USER as any);
     
     vi.mocked(mockTokenService.verifyPasswordResetToken).mockImplementation(() => {

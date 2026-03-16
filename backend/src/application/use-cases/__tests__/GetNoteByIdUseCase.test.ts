@@ -12,12 +12,12 @@ describe('GetNoteByIdUseCase', () => {
     useCase = new GetNoteByIdUseCase(mockNoteRepository);
   });
 
-  it('retorna la nota exitosamente si existe', async () => {
+  it('successfully returns the note if it exists', async () => {
     const expectedNote = Note.create({
       id: 'note-123',
       userId: 'user-001',
-      title: 'Nota de Prueba',
-      content: 'Contenido de prueba',
+      title: 'Test Note',
+      content: 'Test content',
       tags: [],
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -28,11 +28,11 @@ describe('GetNoteByIdUseCase', () => {
     const result = await useCase.execute({ id: 'note-123' });
 
     expect(result.id).toBe('note-123');
-    expect(result.title).toBe('Nota de Prueba');
+    expect(result.title).toBe('Test Note');
     expect(mockNoteRepository.findById).toHaveBeenCalledWith('note-123');
   });
 
-  it('lanza un error si la nota no se encuentra en la base de datos', async () => {
+  it('throws an error if the note is not found in the database', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(null);
 
     await expect(useCase.execute({ id: 'note-999' }))

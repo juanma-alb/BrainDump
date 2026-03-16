@@ -44,7 +44,7 @@ export default function DashboardFilters({
 
       <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-3 w-full relative z-30">
         
-        {/* Toggle Favoritas */}
+        {/* Toggle Favorites */}
         {user?.role === 'USER' && (
           <button
             onClick={() => setFilterFavorite(!filterFavorite)}
@@ -61,7 +61,7 @@ export default function DashboardFilters({
           </button>
         )}
 
-        {/* Filtro por Etiqueta*/}
+        {/* tag filter*/}
         <div className="relative">
           {user?.role === 'USER' && (
             <button
@@ -104,7 +104,7 @@ export default function DashboardFilters({
           )}
         </div>
 
-        {/* Filtro de Fechas */}
+        {/* date filter */}
         <div className="relative">
           <button
             onClick={() => { setIsDateMenuOpen(!isDateMenuOpen); setIsTagMenuOpen(false); }}

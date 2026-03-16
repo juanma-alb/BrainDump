@@ -4,8 +4,8 @@ import { Note } from './Note';
 const validProps = {
   id: 'test-id-1',
   userId: 'user-001',
-  title: 'Mi primera idea',
-  content: 'Contenido de la idea.',
+  title: 'My first idea',
+  content: 'Idea content.',
   tags: ['brainstorm'],
   isFavorite: true,
   authorUsername: 'johndoe',
@@ -14,55 +14,55 @@ const validProps = {
 };
 
 describe('Note Entity', () => {
-  it('crea una nota válida con todos los campos incluyendo campos opcionales', () => {
+  it('creates a valid note with all fields including optional ones', () => {
     const note = Note.create(validProps);
-    expect(note.title).toBe('Mi primera idea');
+    expect(note.title).toBe('My first idea');
     expect(note.userId).toBe('user-001');
     expect(note.tags).toContain('brainstorm');
     expect(note.isFavorite).toBe(true);
     expect(note.authorUsername).toBe('johndoe');
   });
 
-  it('asigna isFavorite en false por defecto si no se provee', () => {
+  it('assigns isFavorite to false by default if not provided', () => {
     const { isFavorite, authorUsername, ...propsWithoutOptionals } = validProps;
     const note = Note.create(propsWithoutOptionals);
     expect(note.isFavorite).toBe(false);
     expect(note.authorUsername).toBeUndefined();
   });
 
-  it('lanza error si userId está vacío', () => {
+  it('throws an error if userId is empty', () => {
     expect(() => Note.create({ ...validProps, userId: '  ' })).toThrowError(
       'Una nota debe pertenecer a un usuario.'
     );
   });
 
-  it('lanza error si el título está vacío', () => {
+  it('throws an error if the title is empty', () => {
     expect(() => Note.create({ ...validProps, title: '   ' })).toThrowError(
       'El título de una nota no puede estar vacío.'
     );
   });
 
-  it('lanza error si el contenido está vacío', () => {
+  it('throws an error if the content is empty', () => {
     expect(() => Note.create({ ...validProps, content: '' })).toThrowError(
       'El contenido de una nota no puede estar vacío.'
     );
   });
 
-  it('devuelve una nueva instancia inmutable al actualizar el contenido', () => {
+  it('returns a new immutable instance when updating the content', () => {
     const note = Note.create(validProps);
-    const updated = note.withUpdatedContent('Nuevo contenido.');
+    const updated = note.withUpdatedContent('New content.');
 
-    expect(updated.content).toBe('Nuevo contenido.');
-    expect(note.content).toBe('Contenido de la idea.');
+    expect(updated.content).toBe('New content.');
+    expect(note.content).toBe('Idea content.');
     expect(updated).not.toBe(note);
   });
 
-  it('añade nuevos tags correctamente sin duplicar los existentes', () => {
-    const note = Note.create(validProps); // Inicia con ['brainstorm']
+  it('adds new tags correctly without duplicating existing ones', () => {
+    const note = Note.create(validProps); 
     const updated = note.withAddedTags(['react', 'brainstorm', 'node']);
 
     expect(updated.tags).toHaveLength(3);
     expect(updated.tags).toEqual(expect.arrayContaining(['brainstorm', 'react', 'node']));
-    expect(updated).not.toBe(note); // Verifica inmutabilidad
+    expect(updated).not.toBe(note); 
   });
 });

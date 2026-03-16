@@ -6,11 +6,12 @@ export interface ForgotPasswordInput {
   email: string;
 }
 
-/**
- * Caso de Uso: Iniciar el flujo de recuperación de contraseña.
- * Si el email no existe se hace un return silencioso para evitar
- * ataques de enumeración de emails (no revelar si un correo está registrado).
+/*
+  Use Case: Initiate the password recovery process.
+  If the email address does not exist, a silent return is performed to prevent
+  email enumeration attacks (do not reveal whether an email address is registered).
  */
+
 export class ForgotPasswordUseCase {
   constructor(
     private readonly userRepository: IUserRepository,

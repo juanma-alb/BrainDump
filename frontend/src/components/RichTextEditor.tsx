@@ -87,7 +87,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ con
     >
       <div className="flex flex-nowrap sm:flex-wrap overflow-x-auto sm:overflow-visible items-center gap-1 p-2 border-b border-gray-200/80 dark:border-slate-700/80 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md transition-colors sticky top-0 z-10 custom-scrollbar pb-2 sm:pb-2">
         
-        {/* Formato de Texto */}
+        {/* text format */}
         <MenuButton title="Negrita" isActive={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
           <span className="font-bold">B</span>
         </MenuButton>
@@ -103,7 +103,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ con
 
         <Divider />
 
-        {/* Encabezados */}
+        {/* Headers */}
         <MenuButton title="Título Principal" isActive={editor.isActive('heading', { level: 1 })} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
           <span className="font-bold text-base">H1</span>
         </MenuButton>
@@ -116,7 +116,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ con
 
         <Divider />
 
-        {/* Listas y Citas */}
+        {/* Lists and Cites */}
         <MenuButton title="Lista con viñetas" isActive={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
           <span>•</span>
         </MenuButton>
@@ -129,7 +129,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ con
 
         <Divider />
 
-        {/* Alineación */}
+        {/* Alineation */}
         <MenuButton title="Alinear a la izquierda" isActive={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
           ⫷
         </MenuButton>

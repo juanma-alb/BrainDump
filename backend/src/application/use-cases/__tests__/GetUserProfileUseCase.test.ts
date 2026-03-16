@@ -12,7 +12,7 @@ describe('GetUserProfileUseCase', () => {
     useCase = new GetUserProfileUseCase(mockUserRepository);
   });
 
-  it('devuelve el perfil del usuario si existe', async () => {
+  it('returns the user profile if it exists', async () => {
     const fakeUser = {
       id: 'user-123',
       email: 'test@admin.com',
@@ -32,7 +32,7 @@ describe('GetUserProfileUseCase', () => {
     expect(result).not.toHaveProperty('passwordHash');
   });
 
-  it('lanza un error si el usuario no existe', async () => {
+  it('throws an error if the user does not exist', async () => {
     vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(null);
 
     await expect(useCase.execute({ username: 'ghost_user' }))

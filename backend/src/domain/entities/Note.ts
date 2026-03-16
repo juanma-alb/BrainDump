@@ -62,8 +62,8 @@ export class Note {
   }
 
   /*
-    Devuelve una nueva instancia con los tags fusionados (sin duplicados).
-    Preserva los tags existentes y añade los nuevos.
+    withAddedTags: Returns a new instance with the merged tags (without duplicates).
+    Preserves the existing tags and adds the new ones.
    */
   withAddedTags(newTags: string[]): Note {
     const merged = Array.from(new Set([...this.tags, ...newTags]));

@@ -10,9 +10,9 @@ describe('UpdateNoteUseCase', () => {
   const existingNote = Note.create({
     id: 'note-123',
     userId: 'owner-777',
-    title: 'Título Antiguo',
-    content: 'Contenido antiguo',
-    tags: ['viejo'],
+    title: 'Old Title',
+    content: 'Old content',
+    tags: ['old'],
     isFavorite: false,
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -23,26 +23,26 @@ describe('UpdateNoteUseCase', () => {
     useCase = new UpdateNoteUseCase(mockNoteRepository);
   });
 
-  it('actualiza exitosamente el título, contenido, tags y el estado isFavorite', async () => {
+  it('successfully updates title, content, tags and isFavorite state', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     const result = await useCase.execute({
       noteId: 'note-123',
       userId: 'owner-777',
-      title: 'Título Nuevo',
-      content: 'Contenido nuevo',
-      tags: ['nuevo', 'actualizado'],
+      title: 'New Title',
+      content: 'New content',
+      tags: ['new', 'updated'],
       isFavorite: true,
     });
 
-    expect(result.title).toBe('Título Nuevo');
-    expect(result.content).toBe('Contenido nuevo');
-    expect(result.tags).toEqual(['nuevo', 'actualizado']);
+    expect(result.title).toBe('New Title');
+    expect(result.content).toBe('New content');
+    expect(result.tags).toEqual(['new', 'updated']);
     expect(result.isFavorite).toBe(true);
     expect(mockNoteRepository.update).toHaveBeenCalledOnce();
   });
 
-  it('conserva los valores originales si no se envían en el input', async () => {
+  it('keeps original values if they are not provided in the input', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     const result = await useCase.execute({
@@ -51,34 +51,34 @@ describe('UpdateNoteUseCase', () => {
       isFavorite: true, 
     });
 
-    expect(result.title).toBe('Título Antiguo');
-    expect(result.content).toBe('Contenido antiguo');
+    expect(result.title).toBe('Old Title');
+    expect(result.content).toBe('Old content');
     expect(result.isFavorite).toBe(true);
     expect(mockNoteRepository.update).toHaveBeenCalledOnce();
   });
 
-  it('lanza un error de autorización si un usuario intenta modificar la nota de otro (IDOR)', async () => {
+  it('throws an authorization error if a user tries to modify another user\'s note (IDOR)', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(existingNote);
 
     await expect(
       useCase.execute({
         noteId: 'note-123',
         userId: 'hacker-999',
-        title: 'Título Hackeado',
+        title: 'Hacked Title',
       })
     ).rejects.toThrowError('No tienes permiso para modificar esta nota.');
 
     expect(mockNoteRepository.update).not.toHaveBeenCalled();
   });
 
-  it('lanza un error si se intenta actualizar una nota inexistente', async () => {
+  it('throws an error when trying to update a non-existent note', async () => {
     vi.mocked(mockNoteRepository.findById).mockResolvedValue(null);
 
     await expect(
       useCase.execute({
         noteId: 'invalid-id',
         userId: 'owner-777',
-        title: 'Intentando actualizar',
+        title: 'Attempting to update',
       })
     ).rejects.toThrowError('Nota no encontrada.');
 

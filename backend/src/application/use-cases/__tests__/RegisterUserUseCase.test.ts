@@ -19,7 +19,7 @@ describe('RegisterUserUseCase', () => {
     useCase = new RegisterUserUseCase(mockUserRepository);
   });
 
-  it('registra un usuario nuevo y devuelve los datos sin el password', async () => {
+  it('registers a new user and returns the data without the password', async () => {
     vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
     vi.mocked(mockUserRepository.findByUsername).mockResolvedValue(null);
 
@@ -37,7 +37,7 @@ describe('RegisterUserUseCase', () => {
     expect(result).not.toHaveProperty('passwordHash');
   });
 
-  it('lanza error si el email ya está registrado', async () => {
+  it('throws an error if the email is already registered', async () => {
     const existingUser = {
       id: 'user-existing',
       email: 'duplicado@example.com',
@@ -55,7 +55,7 @@ describe('RegisterUserUseCase', () => {
     expect(mockUserRepository.save).not.toHaveBeenCalled();
   });
 
-  it('lanza error si el username ya está en uso', async () => {
+  it('throws an error if the username is already in use', async () => {
     const existingUser = {
       id: 'user-existing',
       username: 'duplicado_user',

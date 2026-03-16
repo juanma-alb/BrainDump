@@ -75,7 +75,7 @@ export default function AdminDashboard() {
           />
         )}
 
-       {/* Estado Inicial */}
+       {/* initial state */}
         {!searchedUser && !loading && !error && (
           <div className="text-center pt-2 md:pt-4 pb-10 md:pb-20 px-4">
             

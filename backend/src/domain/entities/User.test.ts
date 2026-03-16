@@ -12,7 +12,7 @@ const validUserProps = {
 };
 
 describe('User Entity', () => {
-  it('crea un usuario válido con todos los campos correctos', () => {
+  it('creates a valid user with all correct fields', () => {
     const user = User.create(validUserProps);
     expect(user.id).toBe('usr-001');
     expect(user.email).toBe('test@braindump.com');
@@ -20,50 +20,49 @@ describe('User Entity', () => {
     expect(user.role).toBe('USER');
   });
 
-  it('crea un usuario administrador correctamente', () => {
+  it('creates an admin user correctly', () => {
     const adminProps = { ...validUserProps, role: 'ADMIN' as UserRole };
     const admin = User.create(adminProps);
     expect(admin.role).toBe('ADMIN');
   });
 
-  it('lanza error si el email está vacío', () => {
+  it('throws an error if the email is empty', () => {
     expect(() => User.create({ ...validUserProps, email: '   ' })).toThrowError(
       'El email del usuario no puede estar vacío.'
     );
   });
 
-  it('lanza error si el formato del email no es válido', () => {
+  it('throws an error if the email format is invalid', () => {
     expect(() => User.create({ ...validUserProps, email: 'correo-sin-arroba.com' })).toThrowError(
       'El formato del email no es válido.'
     );
   });
 
-  it('lanza error si el username está vacío', () => {
+  it('throws an error if the username is empty', () => {
     expect(() => User.create({ ...validUserProps, username: '' })).toThrowError(
       'El username no puede estar vacío.'
     );
   });
 
-  it('lanza error si el username tiene menos de 3 caracteres', () => {
+  it('throws an error if the username has less than 3 characters', () => {
     expect(() => User.create({ ...validUserProps, username: 'ab' })).toThrowError(
       'El username debe tener al menos 3 caracteres.'
     );
   });
 
-  it('lanza error si el username contiene espacios', () => {
+  it('throws an error if the username contains spaces', () => {
     expect(() => User.create({ ...validUserProps, username: 'john doe' })).toThrowError(
       'El username no puede contener espacios.'
     );
   });
 
-  it('lanza error si el hash de la contraseña está vacío', () => {
+  it('throws an error if the password hash is empty', () => {
     expect(() => User.create({ ...validUserProps, passwordHash: '   ' })).toThrowError(
       'El hash de la contraseña no puede estar vacío.'
     );
   });
 
-  it('lanza error si el rol no es válido', () => {
-    // Forzamos un rol inválido mediante casting para probar la validación de dominio
+  it('throws an error if the role is invalid', () => {
     expect(() => User.create({ ...validUserProps, role: 'GUEST' as UserRole })).toThrowError(
       "El rol debe ser 'USER' o 'ADMIN'."
     );

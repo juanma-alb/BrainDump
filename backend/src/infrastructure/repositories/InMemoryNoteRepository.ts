@@ -2,11 +2,12 @@ import type { Note } from '@domain/entities/Note';
 import type { INoteRepository, NoteFilters, PaginatedResult } from '@domain/ports/INoteRepository';
 
 /**
- * Implementación en memoria del repositorio de notas.
- * Ideal para tests de integración, desarrollo local y demos.
- * En producción se reemplazaría por una implementación con base de datos real
- * sin cambiar nada en Domain ni Application.
+ * In-memory implementation of the notes repository.
+ * Ideal for integration tests, local development, and demos.
+ * In production, this would be replaced with a real database implementation
+ * without changing anything in the Domain or Application.
  */
+
 export class InMemoryNoteRepository implements INoteRepository {
   private readonly store = new Map<string, Note>();
 
@@ -40,7 +41,7 @@ export class InMemoryNoteRepository implements INoteRepository {
       note.tags.forEach((tag) => tagsSet.add(tag));
     });
 
-    return Array.from(tagsSet); // Convertimos el Set (valores únicos) de nuevo a un Array
+    return Array.from(tagsSet); 
   }
 
   async update(note: Note): Promise<void> {
@@ -55,10 +56,8 @@ export class InMemoryNoteRepository implements INoteRepository {
   }
 
   async findMany(filters: NoteFilters): Promise<PaginatedResult<Note>> {
-    // 1. Empezamos con todas las notas en el repositorio
     let filteredNotes = Array.from(this.store.values());
 
-    // 2. Aplicamos cada filtro si existe
     if (filters.userId) {
       filteredNotes = filteredNotes.filter((note) => note.userId === filters.userId);
     }
@@ -74,15 +73,13 @@ export class InMemoryNoteRepository implements INoteRepository {
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
       filteredNotes = filteredNotes.filter((note) => 
-        // Asumiendo que la entidad Note tiene 'title' y 'content'.
-        // Si tienes nombres diferentes de propiedad, ajusta esta parte.
+     
         (note.title && note.title.toLowerCase().includes(searchTerm)) ||
         (note.content && note.content.toLowerCase().includes(searchTerm))
       );
     }
 
     if (filters.startDate) {
-      // Asumiendo que la entidad Note tiene un 'createdAt' tipo Date
       filteredNotes = filteredNotes.filter((note) => note.createdAt >= filters.startDate!);
     }
 
@@ -90,15 +87,12 @@ export class InMemoryNoteRepository implements INoteRepository {
       filteredNotes = filteredNotes.filter((note) => note.createdAt <= filters.endDate!);
     }
 
-    // 3. Calculamos la paginación
     const total = filteredNotes.length;
     const totalPages = Math.ceil(total / filters.limit);
     
-    // Obtenemos solo la porción de datos de la página actual
     const startIndex = (filters.page - 1) * filters.limit;
     const paginatedItems = filteredNotes.slice(startIndex, startIndex + filters.limit);
 
-    // 4. Retornamos el resultado paginado respetando la interfaz PaginatedResult
     return {
       items: paginatedItems,
       total,

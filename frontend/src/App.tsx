@@ -38,7 +38,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
 
-            {/* Rutas Privadas */}
+            {/* private routes */}
             <Route
               path="/dashboard"
               element={

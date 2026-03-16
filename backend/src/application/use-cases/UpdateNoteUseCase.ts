@@ -10,8 +10,8 @@ export interface UpdateNoteInput {
   isFavorite?: boolean;
 }
 
-/*
-Seguridad IDOR/BOLA: verifica que el userId del solicitante coincide
+/*Use Case: Edit an existing note.
+IDOR/BOLA Security: Verifies that the requester's user ID matches
  */
 export class UpdateNoteUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}

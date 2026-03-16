@@ -18,9 +18,9 @@ export interface RegisterUserOutput {
   createdAt: Date;
 }
 
-/**
- * Caso de Uso: Registrar un nuevo usuario.
- * Verifica unicidad de email y username en paralelo, encripta la contraseña y persiste la entidad.
+/*
+  Use Case: Register a new user.
+  Checks for unique email and username in parallel, encrypts the password, and saves the entity.
  */
 export class RegisterUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

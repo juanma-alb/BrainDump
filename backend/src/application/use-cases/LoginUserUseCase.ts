@@ -18,10 +18,11 @@ export interface LoginUserOutput {
   };
 }
 
-/**
- * Caso de Uso: Autenticar un usuario existente.
- * Usa un mensaje de error genérico para no revelar si el email existe.
+/*
+  Use Case: Authenticate an existing user.
+  Use a generic error message to avoid revealing whether the email address exists.
  */
+
 export class LoginUserUseCase {
   constructor(
     private readonly userRepository: IUserRepository,

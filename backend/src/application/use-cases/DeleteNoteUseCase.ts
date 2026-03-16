@@ -7,10 +7,11 @@ export interface DeleteNoteInput {
 }
 
 /*
-  Caso de Uso: Eliminar una nota por su ID.
+  Use Case: Delete a note by its ID.
 
-  Seguridad IDOR/BOLA
+  IDOR/BOLA Security
  */
+
 export class DeleteNoteUseCase {
   constructor(private readonly noteRepository: INoteRepository) {}
 

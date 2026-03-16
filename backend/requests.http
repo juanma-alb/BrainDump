@@ -1,60 +1,112 @@
-### 0. Obtener Token de Desarrollo
-GET http://localhost:3000/api/auth/dev-token
+###Shortcuts:
+###You can replace the value you obtain for 
+###“token,” “noteId,” and “username” in these
+###variables to test the endpoints more easily. 
 
-### 1. Crear una Nueva Nota
-POST http://localhost:3000/api/notes
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLWRlbW8tMDAxIiwiaWF0IjoxNzcyNzg1MTYyLCJleHAiOjE3NzI3ODg3NjJ9.qdzXuchigGeUll-1BQ_ENFzvBy5pNy8OUbU2dNEbZzg
+@baseUrl = http://localhost:3000/api
+@token = YOUR_JWT_TOKEN_HERE
+@noteId = YOUR_NOTE_ID_HERE
+@username = YOUR_USERNAME_HERE
 
-{
-  "title": "Nota autenticada",
-  "content": "Esta nota pasó por Zod, por el JWT, y se guardó en MongoDB.",
-  "tags": ["seguridad"]
-}
+### ==========================================
+### AUTHENTICATION ENDPOINTS
+### ==========================================
 
-### 2. Auto-etiquetar con Gemini AI
-POST http://localhost:3000/api/notes/58698f31-c4f6-436e-b2db-5d172910ef15/tags
-
-
-### 3. Prueba de Seguridad (tiene que fallar por Zod)
-POST http://localhost:3000/api/notes
+### 1. Register a new user
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "userId": 12345, 
-  "content": ""
-}
-
-###  1. Registrer
-POST http://localhost:3000/api/auth/register
-Content-Type: application/json
-
-{
-  "username": "Admin2",
-  "email": "admin@asd.com",
-  "password": "admin2",
+  "username": "AdminUser",
+  "email": "admin@braindump.dev",
+  "password": "SecurePassword123!",
   "role": "ADMIN"
 }
 
-### 2. login
-POST http://localhost:3000/api/auth/login
+### 2. Login
+# @name login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "asd",
-  "email": "asd@asd.com",
-  "password": "asd123"
+  "email": "admin@braindump.dev",
+  "password": "SecurePassword123!"
 }
 
-### 3. Obtener Notas de un user (RBAC)
-GET http://localhost:3000/api/notes
-Authorization: Bearer 
-
-### 4. Generar Borrador con IA
-POST http://localhost:3000/api/notes/draft
+### 3. Forgot Password (Triggers email with reset link)
+POST {{baseUrl}}/auth/forgot-password
 Content-Type: application/json
-Authorization: Bearer 
 
 {
-  "topic": "Los principios SOLID en la programación orientada a objetos"
+  "email": "admin@braindump.dev"
 }
+
+### 4. Reset Password (Requires token from email)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "id": "USER_ID_FROM_EMAIL",
+  "token": "TOKEN_FROM_EMAIL",
+  "newPassword": "NewSecurePassword123!"
+}
+
+### ==========================================
+### NOTES ENDPOINTS
+### ==========================================
+
+### 5. Get all notes (Supports pagination & filtering)
+GET {{baseUrl}}/notes?page=1&limit=10
+Authorization: Bearer {{token}}
+
+### 6. Create a new note
+POST {{baseUrl}}/notes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My First Note",
+  "content": "<p>This is the content of my note, saved via API.</p>",
+  "tags": ["documentation", "api"]
+}
+
+### 7. Generate an AI draft using Gemini
+POST {{baseUrl}}/notes/draft
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "topic": "The SOLID principles in object-oriented programming"
+}
+
+### 8. Update an existing note
+PUT {{baseUrl}}/notes/{{noteId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My Updated Note",
+  "content": "<p>Updated content.</p>",
+  "tags": ["documentation", "updated"],
+  "isFavorite": true
+}
+
+### 9. Delete a note
+DELETE {{baseUrl}}/notes/{{noteId}}
+Authorization: Bearer {{token}}
+
+### 10. Get all unique tags used by the authenticated user
+GET {{baseUrl}}/notes/tags
+Authorization: Bearer {{token}}
+
+### ==========================================
+### ADMIN ENDPOINTS (Requires ADMIN role)
+### ==========================================
+
+### 11. Get user profile details
+GET {{baseUrl}}/admin/users/{{username}}
+Authorization: Bearer {{token}}
+
+### 12. Get all notes from a specific user
+GET {{baseUrl}}/admin/users/{{username}}/notes
+Authorization: Bearer {{token}}
