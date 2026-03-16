@@ -1,5 +1,6 @@
-import express, { type Express, type Request, type Response } from 'express';
+import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
+import helmet from 'helmet'; 
 import type { NoteController } from './NoteController';
 import type { AuthController } from './AuthController';
 import type { AdminController } from './AdminController';
@@ -26,7 +27,18 @@ export class Server {
   }
 
   private configureMiddleware(): void {
-    this.app.use(cors());
+    this.app.use(helmet()); 
+
+    const allowedOrigins = process.env.FRONTEND_URL 
+      ? [process.env.FRONTEND_URL, 'http://localhost:5173'] 
+      : ['http://localhost:5173'];
+
+    this.app.use(cors({
+      origin: allowedOrigins,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+
     this.app.use(express.json());
   }
 
@@ -45,6 +57,12 @@ export class Server {
 
     this.app.get('/api/admin/users/:username', requireAuth, requireAdmin, (req: Request<{ username: string }>, res: Response) => this.adminController.getUser(req, res));
     this.app.get('/api/admin/users/:username/notes', requireAuth, requireAdmin, (req: Request<{ username: string }>, res: Response) => this.adminController.getUserNotes(req, res));
+
+
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      logger.error({ err }, 'Error no manejado capturado en el middleware global');
+      res.status(500).json({ message: 'Error interno del servidor. Por favor, contacta a soporte.' });
+    });
   }
 
   start(port: number): void {
