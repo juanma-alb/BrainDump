@@ -4,13 +4,11 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerSchema, type RegisterFormValues } from '../schemas/authSchemas';
 import { authService } from '../services/authService';
-import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 
 
 function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [error, setError] = useState<string>('');
 
   const {
@@ -27,7 +25,7 @@ function Register() {
       await authService.register(data);
       toast.success('¡Registro exitoso! Por favor, inicia sesión.');
       navigate('/');
-      
+
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error al registrarse. Intenta nuevamente.');
     }

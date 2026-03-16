@@ -19,7 +19,7 @@ import { GetNotesByUsernameUseCase } from '@application/use-cases/GetNotesByUser
 import { GenerateNoteDraftUseCase } from '@application/use-cases/GenerateNoteDraftUseCase';
 import { ForgotPasswordUseCase } from '@application/use-cases/ForgotPasswordUseCase';
 import { ResetPasswordUseCase } from '@application/use-cases/ResetPasswordUseCase';
-import { NodemailerEmailService } from '@infrastructure/email/NodemailerEmailService';
+import { BrevoEmailService } from '@infrastructure/email/BrevoEmailService';
 import { Server } from '@infrastructure/http/Server';
 import { GetUserTagsUseCase } from '@application/use-cases/GetUserTagsUseCase';
 
@@ -37,7 +37,7 @@ async function main() {
   const userRepository = new MongoDbUserRepository();
   const aiService = new GeminiAiService();
   const tokenService = new JwtTokenService();
-  const emailService = new NodemailerEmailService();
+  const emailService = new BrevoEmailService();
 
   // Casos de uso
   const createNote = new CreateNoteUseCase(noteRepository);
