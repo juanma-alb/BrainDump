@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import type { Note } from "../types/note";
 import { createNoteSchema, updateNoteSchema } from "../schemas/noteSchemas";
 import type { CreateNoteFormValues, UpdateNoteFormValues } from "../schemas/noteSchemas";
 import { noteService } from "../services/noteService";
 import { toast } from "sonner";
+import type { RichTextEditorRef } from "../components/RichTextEditor"; 
 
 export type UnifiedFormValues = {
   title: string;
@@ -29,6 +30,9 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
   const [aiError, setAiError] = useState("");
   const [viewMode, setViewMode] = useState<'VIEW' | 'EDIT' | 'CREATE'>('CREATE');
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false); 
+  
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const editorRef = useRef<RichTextEditorRef>(null);
 
   const isEditing = Boolean(noteToEdit);
   const schema = isEditing ? updateNoteSchema : createNoteSchema;
@@ -51,6 +55,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
       reset();
       setLocalTags([]);
     }
+    setShowDraftBanner(false);
   }, [noteToEdit, setValue, reset, isOpen, initialMode]);
 
   const handleDeleteClick = () => setIsConfirmDeleteOpen(true);
@@ -103,15 +108,41 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
     try {
       setIsGenerating(true);
       const result = await noteService.generateDraft(aiTopic.trim());
-      setValue("content", result.generatedContent, { shouldValidate: true });
+      
+      if (editorRef.current) {
+        const editor = editorRef.current.getEditor();
+        if (editor) {
+           editor.commands.insertContent(result.generatedContent);
+           setValue("content", editor.getHTML(), { shouldValidate: true });
+        }
+      } else {
+         setValue("content", result.generatedContent, { shouldValidate: true });
+      }
+
       setShowAiInput(false);
       setAiTopic("");
+      setShowDraftBanner(true); 
     } catch (error) {
       console.error("Error al generar borrador:", error);
       setAiError("Error al generar el borrador. Intenta de nuevo.");
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleUndoDraft = () => {
+    if (editorRef.current) {
+      editorRef.current.undo();
+      const editor = editorRef.current.getEditor();
+      if(editor) {
+         setValue("content", editor.getHTML(), { shouldValidate: true });
+      }
+    }
+    setShowDraftBanner(false);
+  };
+
+  const handleAcceptDraft = () => {
+    setShowDraftBanner(false);
   };
 
   const onSubmit = async (data: UnifiedFormValues) => {
@@ -152,6 +183,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
       reset();
       setLocalTags([]);
       setTagInput("");
+      setShowDraftBanner(false); 
       onClose();
     }
   };
@@ -164,6 +196,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
       setLocalTags(noteToEdit.tags);
       clearErrors();
       setViewMode('VIEW');
+      setShowDraftBanner(false); 
     } else {
       handleClose();
     }
@@ -175,6 +208,7 @@ export function useNoteModal({ isOpen, onClose, noteToEdit, onSave, initialMode 
     showAiInput, setShowAiInput, aiTopic, setAiTopic, aiError, isGenerating,
     handleDelete: handleDeleteClick, handleAddTag, handleRemoveTag, handleKeyDown, 
     handleGenerateDraft, onSubmit, handleClose, handleCancel,
-    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete 
+    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete,
+    showDraftBanner, handleUndoDraft, handleAcceptDraft, editorRef
   };
 }

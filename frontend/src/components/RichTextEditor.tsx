@@ -1,8 +1,8 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
-import { useEffect } from 'react';
+import { useEffect, forwardRef, useImperativeHandle } from 'react';
 
 const extensions = [
   StarterKit.configure({
@@ -14,13 +14,18 @@ const extensions = [
   }),
 ];
 
+export interface RichTextEditorRef {
+  undo: () => void;
+  getEditor: () => Editor | null;
+}
+
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   disabled?: boolean;
 }
 
-export default function RichTextEditor({ content, onChange, disabled }: RichTextEditorProps) {
+const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ content, onChange, disabled }, ref) => {
   const editor = useEditor({
     extensions,
     content: content,
@@ -29,6 +34,15 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
       onChange(editor.getHTML());
     },
   });
+
+  useImperativeHandle(ref, () => ({
+    undo: () => {
+      if (editor) {
+        editor.chain().focus().undo().run();
+      }
+    },
+    getEditor: () => editor,
+  }));
 
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
@@ -104,10 +118,10 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
 
         {/* Listas y Citas */}
         <MenuButton title="Lista con viñetas" isActive={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
-          <span>•=</span>
+          <span>•</span>
         </MenuButton>
         <MenuButton title="Lista numerada" isActive={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
-          <span className="text-xs">1.=</span>
+          <span className="text-xs">1.</span>
         </MenuButton>
         <MenuButton title="Cita (Blockquote)" isActive={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
           <span className="font-serif font-bold">❞</span>
@@ -140,4 +154,6 @@ export default function RichTextEditor({ content, onChange, disabled }: RichText
       </div>
     </div>
   );
-}
+});
+
+export default RichTextEditor;

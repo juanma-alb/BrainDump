@@ -6,6 +6,7 @@ import NoteView from "./note-modal/NoteView";
 import AiAssistant from "./note-modal/AiAssistant";
 import TagEditor from "./note-modal/TagEditor";
 import ConfirmModal from "./ConfirmModal";
+import DraftBanner from "./note-modal/DraftBanner";
 
 interface NoteModalProps {
   isOpen: boolean;
@@ -22,7 +23,8 @@ export default function NoteModal(props: NoteModalProps) {
     showAiInput, setShowAiInput, aiTopic, setAiTopic, aiError, isGenerating,
     handleDelete, handleAddTag, handleRemoveTag, handleKeyDown,
     handleGenerateDraft, onSubmit, handleClose, handleCancel,
-    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete
+    isConfirmDeleteOpen, setIsConfirmDeleteOpen, confirmDelete,
+    showDraftBanner, handleUndoDraft, handleAcceptDraft, editorRef
   } = useNoteModal(props);
 
   if (!props.isOpen) return null;
@@ -57,15 +59,23 @@ export default function NoteModal(props: NoteModalProps) {
 
               <div>
                 <AiAssistant 
-                  showAiInput={showAiInput} setShowAiInput={setShowAiInput}
-                  aiTopic={aiTopic} setAiTopic={setAiTopic} aiError={aiError}
-                  handleGenerateDraft={handleGenerateDraft} isGenerating={isGenerating} disabled={isSubmitting}
-                />
-                <RichTextEditor
-                  content={watch("content")}
-                  onChange={(newContent) => setValue("content", newContent, { shouldValidate: true })}
-                  disabled={isSubmitting}
-                />
+                showAiInput={showAiInput} setShowAiInput={setShowAiInput}
+                aiTopic={aiTopic} setAiTopic={setAiTopic} aiError={aiError}
+                handleGenerateDraft={handleGenerateDraft} isGenerating={isGenerating} disabled={isSubmitting}
+              />
+
+              <DraftBanner 
+                isVisible={showDraftBanner} 
+                onUndo={handleUndoDraft} 
+                onAccept={handleAcceptDraft} 
+              />
+
+              <RichTextEditor
+                ref={editorRef}
+                content={watch("content")}
+                onChange={(newContent) => setValue("content", newContent, { shouldValidate: true })}
+                disabled={isSubmitting}
+              />
                 {errors.content && <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">{errors.content.message}</p>}
               </div>
 
